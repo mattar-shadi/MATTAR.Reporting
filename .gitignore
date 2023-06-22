@@ -1,0 +1,6 @@
+.vs
+sample/bin
+sample/obj
+src/bin
+src/obj
+/sample/*.odt#
