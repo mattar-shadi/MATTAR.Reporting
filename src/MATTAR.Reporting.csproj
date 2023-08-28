@@ -1,10 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	
     <PropertyGroup>
-		<Version>1.0.0</Version>
+		<Version>1.0.1</Version>
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+		<PackageProjectUrl>https://github.com/mattar-shadi/MATTAR.Reporting</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/mattar-shadi/MATTAR.Reporting.git</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
     </PropertyGroup>
 
     <ItemGroup>
