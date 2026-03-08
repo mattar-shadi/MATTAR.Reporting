@@ -26,3 +26,37 @@ string path = report.GenerateReport(templateDocPath, outputFilePath,
     }
 );
 Console.WriteLine("Output Directory : " + Path.Combine(AppDomain.CurrentDomain.BaseDirectory, path));
+
+// Example with HtmlReport
+Console.WriteLine("");
+Console.WriteLine("--- Example HtmlReport ---");
+IReport htmlReport = new HtmlReport();
+string htmlTemplatePath = "FACTURE.html";
+string htmlOutputPath = $"Output\\{DateTime.Now:yyyy-MM-dd}_FACTURE_from_html.pdf";
+
+// Create a sample HTML template if it doesn't exist
+if (!File.Exists(htmlTemplatePath))
+{
+    File.WriteAllText(htmlTemplatePath, """
+        <!DOCTYPE html>
+        <html>
+        <body>
+            <h1>Facture N° {{ Number }}</h1>
+            <p>Client : {{ Name }}</p>
+            <p>Date : {{ Date }}</p>
+            <p>Total : {{ Total }} €</p>
+        </body>
+        </html>
+        """);
+}
+
+string htmlPath = htmlReport.GenerateReport(htmlTemplatePath, htmlOutputPath,
+    new Dictionary<string, string?>
+    {
+        { "Number", "F2231323" },
+        { "Name", "MATTAR SASU" },
+        { "Date", DateTime.Now.ToShortDateString() },
+        { "Total", "107 100" }
+    }
+);
+Console.WriteLine("Output HTML Report : " + Path.Combine(AppDomain.CurrentDomain.BaseDirectory, htmlPath));
