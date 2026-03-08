@@ -172,6 +172,8 @@ Exemple de template HTML (`FACTURE.html`) :
 
 > Les placeholders suivent la syntaxe **Scriban** (`{{ clé }}`). Toutes les clés du dictionnaire `datas` sont disponibles dans le template.
 
+> ⚠️ **Limitations connues** : `HtmlRenderer.PdfSharp` ne supporte pas les CSS modernes (Flexbox, CSS Grid) ni JavaScript. Pour des mises en page complexes, envisagez d'utiliser PuppeteerSharp (Apache 2.0).
+
 ---
 
 ## 🔐 Sécurité du document généré
@@ -227,7 +229,8 @@ public interface IReport
 
 - [x] Génération PDF via AcroForm
 - [x] Génération HTML (via Scriban + HtmlRenderer.PdfSharp)
-- [ ] Export PDF depuis template HTML avancé
+- [x] Export PDF depuis template HTML simple (CSS basique, pas de Flexbox/Grid/JS)
+- [ ] Export PDF depuis template HTML avancé (CSS modernes, images embarquées, JavaScript)
 - [ ] Support des images dans les champs
 - [ ] Publication NuGet officielle
 
