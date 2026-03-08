@@ -11,7 +11,8 @@
 - ✅ Protection du document généré par mot de passe propriétaire
 - ✅ Création automatique du dossier de sortie si inexistant
 - ✅ Permissions de sécurité configurables (impression, annotations, extraction...)
-- 🔜 Support HTML (en cours de développement)
+- ✅ Génération de rapports depuis un template HTML avec remplacement de placeholders (via Scriban)
+- ✅ Export PDF depuis un template HTML (via HtmlRenderer.PdfSharp)
 
 ---
 
@@ -23,7 +24,7 @@ MATTAR.Reporting/
 │   ├── Interfaces/
 │   │   └── IReport.cs          # Interface commune à tous les générateurs de rapports
 │   ├── PdfReport.cs            # Implémentation PDF (via PdfSharpCore)
-│   ├── HtmlReport.cs           # Implémentation HTML (TODO)
+│   ├── HtmlReport.cs           # Implémentation HTML (via Scriban + HtmlRenderer.PdfSharp)
 │   └── MATTAR.Reporting.csproj # Projet de la bibliothèque
 ├── sample/
 │   ├── Program.cs              # Exemple d'utilisation de la bibliothèque
@@ -56,7 +57,10 @@ dotnet build
 ## 📋 Prérequis
 
 - [.NET 7.0](https://dotnet.microsoft.com/en-us/download/dotnet/7.0) ou supérieur
-- Dépendance NuGet : [`PdfSharpCore`](https://www.nuget.org/packages/PdfSharpCore/) `1.3.56`
+- Dépendances NuGet :
+  - [`PdfSharpCore`](https://www.nuget.org/packages/PdfSharpCore/) `1.3.56`
+  - [`Scriban`](https://www.nuget.org/packages/Scriban/) `5.9.0`
+  - [`HtmlRenderer.PdfSharp.NetStandard2`](https://www.nuget.org/packages/HtmlRenderer.PdfSharp.NetStandard2/) `1.5.1.3`
 
 ---
 
@@ -106,6 +110,67 @@ string generatedFilePath = report.GenerateReport(
 
 Console.WriteLine("Fichier généré : " + Path.GetFullPath(generatedFilePath));
 ```
+
+---
+
+### 3. Générer un rapport depuis un template HTML
+
+Créez un fichier HTML contenant des **placeholders** au format `{{ NomDuChamp }}` (syntaxe Scriban). Ces noms correspondent aux clés du dictionnaire de données.
+
+```csharp
+using MATTAR.Reporting;
+
+IReport htmlReport = new HtmlReport();
+
+string templatePath = "templates/FACTURE.html";
+
+// Générer un PDF depuis un template HTML
+string outputPdfPath = $"Output/{DateTime.Now:yyyy-MM-dd}_FACTURE.pdf";
+string generatedPdfPath = htmlReport.GenerateReport(
+    templatePath,
+    outputPdfPath,
+    new Dictionary<string, string?>
+    {
+        { "Number", "F2231323" },
+        { "Name",   "MATTAR SASU" },
+        { "Date",   DateTime.Now.ToShortDateString() },
+        { "Total",  "107 100" }
+    }
+);
+
+// Générer un fichier HTML depuis un template HTML
+string outputHtmlPath = $"Output/{DateTime.Now:yyyy-MM-dd}_FACTURE.html";
+string generatedHtmlPath = htmlReport.GenerateReport(
+    templatePath,
+    outputHtmlPath,
+    new Dictionary<string, string?>
+    {
+        { "Number", "F2231323" },
+        { "Name",   "MATTAR SASU" },
+        { "Date",   DateTime.Now.ToShortDateString() },
+        { "Total",  "107 100" }
+    }
+);
+
+Console.WriteLine("PDF généré : " + Path.GetFullPath(generatedPdfPath));
+Console.WriteLine("HTML généré : " + Path.GetFullPath(generatedHtmlPath));
+```
+
+Exemple de template HTML (`FACTURE.html`) :
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>Facture N° {{ Number }}</h1>
+    <p>Client : {{ Name }}</p>
+    <p>Date : {{ Date }}</p>
+    <p>Total : {{ Total }} €</p>
+</body>
+</html>
+```
+
+> Les placeholders suivent la syntaxe **Scriban** (`{{ clé }}`). Toutes les clés du dictionnaire `datas` sont disponibles dans le template.
 
 ---
 
@@ -161,8 +226,8 @@ public interface IReport
 ## 📌 Feuille de route
 
 - [x] Génération PDF via AcroForm
-- [ ] Génération HTML
-- [ ] Export PDF depuis template HTML
+- [x] Génération HTML (via Scriban + HtmlRenderer.PdfSharp)
+- [ ] Export PDF depuis template HTML avancé
 - [ ] Support des images dans les champs
 - [ ] Publication NuGet officielle
 
