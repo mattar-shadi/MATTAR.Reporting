@@ -15,10 +15,16 @@ namespace MATTAR.Reporting
 
             // 2. Replace placeholders via Scriban
             var template = Template.Parse(templateContent);
+            if (template.HasErrors)
+            {
+                throw new InvalidOperationException(
+                    $"Scriban template error(s): {string.Join(", ", template.Messages)}");
+            }
             var scriptObject = new Scriban.Runtime.ScriptObject();
             foreach (var data in datas)
             {
-                scriptObject.Add(data.Key, data.Value);
+                // Use SetValue with readOnly: false to disable Scriban's automatic snake_case renaming
+                scriptObject.SetValue(data.Key, data.Value, readOnly: false);
             }
             var context = new Scriban.TemplateContext();
             context.PushGlobal(scriptObject);
@@ -36,6 +42,7 @@ namespace MATTAR.Reporting
 
             if (extension == ".html")
             {
+                // ownerPassword is not applicable for HTML output and is intentionally ignored here
                 File.WriteAllText(outputPathFile, renderedHtml);
             }
             else if (extension == ".pdf")

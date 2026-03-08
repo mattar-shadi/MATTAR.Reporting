@@ -32,12 +32,13 @@ Console.WriteLine("");
 Console.WriteLine("--- Example HtmlReport ---");
 IReport htmlReport = new HtmlReport();
 string htmlTemplatePath = "FACTURE.html";
-string htmlOutputPath = $"Output\\{DateTime.Now:yyyy-MM-dd}_FACTURE_from_html.pdf";
+string htmlOutputPath = Path.Combine("Output", $"{DateTime.Now:yyyy-MM-dd}_FACTURE_from_html.pdf");
 
 // Create a sample HTML template if it doesn't exist
 if (!File.Exists(htmlTemplatePath))
 {
-    File.WriteAllText(htmlTemplatePath, """
+    File.WriteAllText(htmlTemplatePath,
+        """
         <!DOCTYPE html>
         <html>
         <body>
