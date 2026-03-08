@@ -1,0 +1,38 @@
+name: Publish - NuGet
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version à publier (ex: 1.0.2). Laissez vide pour utiliser la version du .csproj.'
+        required: false
+        default: ''
+
+jobs:
+  publish:
+    name: Publish to NuGet
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 7.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+        working-directory: ./src/
+
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+        working-directory: ./src/
+
+      - name: Publish to NuGet
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: src/MATTAR.Reporting.csproj
+          NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
