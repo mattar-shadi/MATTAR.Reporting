@@ -67,9 +67,28 @@ public class HtmlReportTests
     }
 
     [Fact]
+    public void GenerateReport_Throws_WhenTemplateHasParseErrors()
+    {
+        var invalidTemplatePath = Path.Combine("Fixtures", "INVALID_TEMPLATE.html");
+        var outputPath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.html");
+        var ex = Assert.Throws<InvalidOperationException>(() =>
+            _report.GenerateReport(invalidTemplatePath, outputPath, new Dictionary<string, string?>()));
+
+        ex.Message.ShouldContain("Template parsing failed:");
+        // Verify that Scriban error detail is appended (message is more than just the prefix)
+        ex.Message.Length.ShouldBeGreaterThan("Template parsing failed: ".Length);
+    }
+
+    [Fact]
     public void GenerateReport_WithNullPassword_DoesNotApplySecurity()
     {
-        var outputPath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.html");
+        // HTML→PDF uses TheArtOfDev.HtmlRenderer.PdfSharp which requires
+        // System.Drawing.Common — only available on Windows.
+        if (!System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(
+                System.Runtime.InteropServices.OSPlatform.Windows))
+            return;
+
+        var outputPath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.pdf");
         try
         {
             var result = _report.GenerateReport(

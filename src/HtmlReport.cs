@@ -18,6 +18,9 @@ namespace MATTAR.Reporting
 
             // 2. Replace placeholders via Scriban
             var template = Template.Parse(templateContent);
+            if (template.HasErrors)
+                throw new InvalidOperationException(
+                    $"Template parsing failed: {string.Join("; ", template.Messages)}");
             var scriptObject = new Scriban.Runtime.ScriptObject();
             foreach (var data in datas)
             {
