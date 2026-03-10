@@ -1,0 +1,139 @@
+using MATTAR.Reporting;
+using Shouldly;
+
+namespace MATTAR.Reporting.Tests;
+
+public class HtmlReportTests
+{
+    private readonly IReport _report = new HtmlReport();
+    private readonly string _templatePath = Path.Combine("Fixtures", "TEMPLATE.html");
+
+    [Fact]
+    public void GenerateReport_Throws_WhenTemplateNotFound()
+    {
+        var ex = Assert.Throws<FileNotFoundException>(() =>
+            _report.GenerateReport("nonexistent.html", "out.html", new Dictionary<string, string?>()));
+
+        ex.FileName.ShouldBe("nonexistent.html");
+        ex.Message.ShouldContain("nonexistent.html");
+    }
+
+    [Fact]
+    public void GenerateReport_ProducesHtmlOutput_WhenExtensionIsHtml()
+    {
+        var outputPath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.html");
+        try
+        {
+            var result = _report.GenerateReport(
+                _templatePath,
+                outputPath,
+                new Dictionary<string, string?>
+                {
+                    { "Number", "INV-001" },
+                    { "Name", "Test Client" },
+                    { "Date", "2024-01-01" },
+                    { "Total", "1000" }
+                });
+
+            result.ShouldBe(outputPath);
+            File.Exists(outputPath).ShouldBeTrue();
+            var content = File.ReadAllText(outputPath);
+            content.ShouldContain("INV-001");
+        }
+        finally
+        {
+            if (File.Exists(outputPath)) File.Delete(outputPath);
+        }
+    }
+
+    [Fact]
+    public void GenerateReport_HandlesNullValue_AsEmpty()
+    {
+        var outputPath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.html");
+        try
+        {
+            var result = _report.GenerateReport(
+                _templatePath,
+                outputPath,
+                new Dictionary<string, string?> { { "Number", null } });
+
+            result.ShouldBe(outputPath);
+            File.Exists(outputPath).ShouldBeTrue();
+        }
+        finally
+        {
+            if (File.Exists(outputPath)) File.Delete(outputPath);
+        }
+    }
+
+    [Fact]
+    public void GenerateReport_WithNullPassword_DoesNotApplySecurity()
+    {
+        var outputPath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.html");
+        try
+        {
+            var result = _report.GenerateReport(
+                _templatePath,
+                outputPath,
+                new Dictionary<string, string?>(),
+                ownerPassword: null);
+
+            result.ShouldBe(outputPath);
+            File.Exists(outputPath).ShouldBeTrue();
+        }
+        finally
+        {
+            if (File.Exists(outputPath)) File.Delete(outputPath);
+        }
+    }
+
+    [Fact]
+    public void GenerateReport_Throws_WhenUnsupportedExtension()
+    {
+        var outputPath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.docx");
+        Assert.Throws<NotSupportedException>(() =>
+            _report.GenerateReport(_templatePath, outputPath, new Dictionary<string, string?>()));
+    }
+
+    [Fact]
+    public void GenerateReport_CreatesOutputDirectory_WhenMissing()
+    {
+        var tempBase = Path.Combine(Path.GetTempPath(), $"reporting_test_{Guid.NewGuid()}");
+        var outputPath = Path.Combine(tempBase, "subdir", "output.html");
+        try
+        {
+            var result = _report.GenerateReport(
+                _templatePath,
+                outputPath,
+                new Dictionary<string, string?>());
+
+            result.ShouldBe(outputPath);
+            File.Exists(outputPath).ShouldBeTrue();
+        }
+        finally
+        {
+            if (Directory.Exists(tempBase)) Directory.Delete(tempBase, true);
+        }
+    }
+
+    [Fact]
+    public void GenerateReport_Throws_WhenOutputDirectoryCannotBeCreated()
+    {
+        // Use a file as a parent "directory" — Directory.CreateDirectory will fail
+        var tempFile = Path.GetTempFileName();
+        try
+        {
+            var outputPath = Path.Combine(tempFile, "output.html");
+
+            Assert.Throws<DirectoryNotFoundException>(() =>
+                _report.GenerateReport(
+                    _templatePath,
+                    outputPath,
+                    new Dictionary<string, string?>()));
+        }
+        finally
+        {
+            if (File.Exists(tempFile)) File.Delete(tempFile);
+        }
+    }
+}

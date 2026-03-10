@@ -8,8 +8,11 @@ namespace MATTAR.Reporting
             string templateDocPath,
             string outputPathFile,
             Dictionary<string, string?> datas,
-            string ownerPassword = "MATTAR.Reporting")
+            string? ownerPassword = "MATTAR.Reporting")
         {
+            if (!File.Exists(templateDocPath))
+                throw new FileNotFoundException($"HTML template not found: '{templateDocPath}'", templateDocPath);
+
             // 1. Read the HTML template
             string templateContent = File.ReadAllText(templateDocPath);
 
@@ -26,9 +29,16 @@ namespace MATTAR.Reporting
 
             // 3. Create the output folder if needed
             string? folder = Path.GetDirectoryName(outputPathFile);
-            if (folder != null && !Directory.Exists(folder))
+            if (!string.IsNullOrEmpty(folder) && !Directory.Exists(folder))
             {
-                Directory.CreateDirectory(folder);
+                try
+                {
+                    Directory.CreateDirectory(folder);
+                }
+                catch (Exception ex)
+                {
+                    throw new DirectoryNotFoundException($"Output directory could not be created: '{folder}'", ex);
+                }
             }
 
             // 4. Save according to extension
@@ -43,15 +53,20 @@ namespace MATTAR.Reporting
                 var document = TheArtOfDev.HtmlRenderer.PdfSharp.PdfGenerator.GeneratePdf(
                     renderedHtml,
                     PdfSharp.PageSize.A4);
-                document.SecuritySettings.OwnerPassword = ownerPassword;
-                document.SecuritySettings.PermitFullQualityPrint = true;
-                document.SecuritySettings.PermitPrint = true;
-                document.SecuritySettings.PermitAccessibilityExtractContent = false;
-                document.SecuritySettings.PermitAnnotations = false;
-                document.SecuritySettings.PermitAssembleDocument = false;
-                document.SecuritySettings.PermitExtractContent = false;
-                document.SecuritySettings.PermitFormsFill = false;
-                document.SecuritySettings.PermitModifyDocument = false;
+
+                if (!string.IsNullOrEmpty(ownerPassword))
+                {
+                    document.SecuritySettings.OwnerPassword = ownerPassword;
+                    document.SecuritySettings.PermitFullQualityPrint = true;
+                    document.SecuritySettings.PermitPrint = true;
+                    document.SecuritySettings.PermitAccessibilityExtractContent = false;
+                    document.SecuritySettings.PermitAnnotations = false;
+                    document.SecuritySettings.PermitAssembleDocument = false;
+                    document.SecuritySettings.PermitExtractContent = false;
+                    document.SecuritySettings.PermitFormsFill = false;
+                    document.SecuritySettings.PermitModifyDocument = false;
+                }
+
                 document.Save(outputPathFile);
             }
             else

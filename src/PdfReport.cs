@@ -10,8 +10,24 @@ namespace MATTAR.Reporting
             string templatePath,
             string outputPath,
             Dictionary<string, string?> datas,
-            string ownerPassword = "MATTAR.Reporting")
+            string? ownerPassword = "MATTAR.Reporting")
         {
+            if (!File.Exists(templatePath))
+                throw new FileNotFoundException($"PDF template not found: '{templatePath}'", templatePath);
+
+            string? folder = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(folder) && !Directory.Exists(folder))
+            {
+                try
+                {
+                    Directory.CreateDirectory(folder);
+                }
+                catch (Exception ex)
+                {
+                    throw new DirectoryNotFoundException($"Output directory could not be created: '{folder}'", ex);
+                }
+            }
+
             PdfDocument template = PdfReader.Open(templatePath, PdfDocumentOpenMode.Modify);
             PdfAcroForm form = template.AcroForm;
 
@@ -24,24 +40,21 @@ namespace MATTAR.Reporting
             {
                 if (!form.Fields.Names.Contains(data.Key))
                     continue;
-                
-                ((PdfTextField)form.Fields[data.Key]).Value = new PdfString(data.Value);
+
+                ((PdfTextField)form.Fields[data.Key]).Value = new PdfString(data.Value ?? string.Empty);
             }
 
-            template.SecuritySettings.OwnerPassword = ownerPassword;
-            template.SecuritySettings.PermitFullQualityPrint = true;
-            template.SecuritySettings.PermitPrint = true;
-            template.SecuritySettings.PermitAccessibilityExtractContent = false;
-            template.SecuritySettings.PermitAnnotations = false;
-            template.SecuritySettings.PermitAssembleDocument = false;
-            template.SecuritySettings.PermitExtractContent = false;
-            template.SecuritySettings.PermitFormsFill = false;
-            template.SecuritySettings.PermitModifyDocument = false;
-
-            string? folder = Path.GetDirectoryName(outputPath);
-            if (folder != null && !Directory.Exists(folder))
+            if (!string.IsNullOrEmpty(ownerPassword))
             {
-                DirectoryInfo directoryInfo = Directory.CreateDirectory(folder);
+                template.SecuritySettings.OwnerPassword = ownerPassword;
+                template.SecuritySettings.PermitFullQualityPrint = true;
+                template.SecuritySettings.PermitPrint = true;
+                template.SecuritySettings.PermitAccessibilityExtractContent = false;
+                template.SecuritySettings.PermitAnnotations = false;
+                template.SecuritySettings.PermitAssembleDocument = false;
+                template.SecuritySettings.PermitExtractContent = false;
+                template.SecuritySettings.PermitFormsFill = false;
+                template.SecuritySettings.PermitModifyDocument = false;
             }
 
             template.Save(outputPath);
