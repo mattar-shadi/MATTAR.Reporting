@@ -3,4 +3,6 @@ sample/bin
 sample/obj
 src/bin
 src/obj
+tests/*/bin
+tests/*/obj
 /sample/*.odt#

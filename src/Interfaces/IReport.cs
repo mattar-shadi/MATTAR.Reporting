@@ -6,6 +6,6 @@
             string templateDocPath, 
             string outputPathFile, 
             Dictionary<string, string?> datas, 
-            string ownerPassword = "MATTAR.Reporting");
+            string? ownerPassword = "MATTAR.Reporting");
     }
 }
