@@ -1,0 +1,16 @@
+title: MATTAR.Reporting
+description: Une bibliothèque C# .NET légère pour générer des rapports PDF et HTML depuis des templates.
+remote_theme: just-the-docs/just-the-docs
+baseurl: "/MATTAR.Reporting"
+url: "https://mattar-shadi.github.io"
+
+plugins:
+  - jekyll-remote-theme
+
+aux_links:
+  "GitHub":
+    - "https://github.com/mattar-shadi/MATTAR.Reporting"
+
+color_scheme: light
+
+nav_sort: order
