@@ -38,7 +38,9 @@ MATTAR.Reporting/
 
 ## 🚀 Installation
 
-### Via NuGet *(si publié)*
+### Via NuGet
+
+Disponible sur NuGet : [https://www.nuget.org/packages/MATTAR.Reporting/](https://www.nuget.org/packages/MATTAR.Reporting/)
 
 ```bash
 dotnet add package MATTAR.Reporting
@@ -229,7 +231,7 @@ public interface IReport
 - [x] Génération HTML (via Scriban + HtmlRenderer.PdfSharp)
 - [ ] Export PDF depuis template HTML avancé
 - [ ] Support des images dans les champs
-- [ ] Publication NuGet officielle
+- [x] Publication NuGet officielle
 
 ---
 
