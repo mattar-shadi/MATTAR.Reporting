@@ -109,4 +109,4 @@ Console.WriteLine("HTML généré : " + Path.GetFullPath(generatedHtmlPath));
 </html>
 ```
 
-> Les placeholders suivent la syntaxe **Scriban** (`{{ clé }}`). Toutes les clés du dictionnaire `datas` sont disponibles dans le template.
+> Les placeholders suivent la syntaxe **Scriban** (`{{ clé }}`). Toutes les clés du dictionnaire `datas` sont disponibles dans le template, éventuellement sous une forme normalisée (**snake_case**) par Scriban (par exemple, la clé `InvoiceNumber` sera accessible sous le nom `invoice_number`).
