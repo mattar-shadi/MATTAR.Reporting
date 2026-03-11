@@ -7,15 +7,16 @@ nav_order: 5
 
 Par défaut, le document PDF généré est protégé par un mot de passe propriétaire (`"MATTAR.Reporting"`). Les permissions appliquées sont :
 
-| Permission                  | Valeur        |
-|-----------------------------|---------------|
-| Impression normale          | ✅ Autorisé   |
-| Impression haute qualité    | ✅ Autorisé   |
-| Annotations                 | ❌ Refusé     |
-| Remplissage de formulaires  | ❌ Refusé     |
-| Extraction du contenu       | ❌ Refusé     |
-| Modification du document    | ❌ Refusé     |
-| Assemblage du document      | ❌ Refusé     |
+| Permission                      | Valeur        |
+|---------------------------------|---------------|
+| Impression normale              | ✅ Autorisé   |
+| Impression haute qualité        | ✅ Autorisé   |
+| Annotations                     | ❌ Refusé     |
+| Remplissage de formulaires      | ❌ Refusé     |
+| Extraction du contenu           | ❌ Refusé     |
+| Extraction pour accessibilité   | ❌ Refusé     |
+| Modification du document        | ❌ Refusé     |
+| Assemblage du document          | ❌ Refusé     |
 
 ---
 
