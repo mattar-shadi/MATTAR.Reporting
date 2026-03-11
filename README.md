@@ -1,5 +1,8 @@
 # MATTAR.Reporting
 
+[![CI - Build & Test](https://github.com/mattar-shadi/MATTAR.Reporting/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mattar-shadi/MATTAR.Reporting/actions/workflows/ci.yml?query=branch%3Amain)
+[![NuGet](https://img.shields.io/nuget/v/MATTAR.Reporting.svg)](https://www.nuget.org/packages/MATTAR.Reporting/)
+
 **MATTAR.Reporting** est une bibliothèque C# .NET simple et légère permettant de générer des rapports en remplissant des gabarits de documents (templates). Elle supporte actuellement la génération de **PDF** via des formulaires AcroForm, avec un support **HTML** prévu dans les prochaines versions.
 
 ---
