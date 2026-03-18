@@ -8,6 +8,10 @@ public class HtmlReportTests
     private readonly IReport _report = new HtmlReport();
     private readonly string _templatePath = Path.Combine("Fixtures", "TEMPLATE.html");
 
+    // Minimal 1×1 white PNG (valid, cross-platform)
+    private static readonly byte[] MinimalPng = Convert.FromBase64String(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQI12NgAAIABQAABjE+ibYAAAAASUVORK5CYII=");
+
     [Fact]
     public void GenerateReport_Throws_WhenTemplateNotFound()
     {
@@ -134,6 +138,111 @@ public class HtmlReportTests
         finally
         {
             if (File.Exists(tempFile)) File.Delete(tempFile);
+        }
+    }
+
+    [Fact]
+    public void GenerateReport_WithImages_InjectsBase64DataUri_InHtmlOutput()
+    {
+        var imagePath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.png");
+        var outputPath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.html");
+        var templatePath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.html");
+        try
+        {
+            File.WriteAllBytes(imagePath, MinimalPng);
+            File.WriteAllText(templatePath, "<html><body><img src=\"{{ Logo }}\" /></body></html>");
+
+            var result = _report.GenerateReport(
+                templatePath,
+                outputPath,
+                new Dictionary<string, string?>(),
+                ownerPassword: null,
+                images: new Dictionary<string, string?> { { "Logo", imagePath } });
+
+            result.ShouldBe(outputPath);
+            var content = File.ReadAllText(outputPath);
+            content.ShouldContain("data:image/png;base64,");
+        }
+        finally
+        {
+            if (File.Exists(imagePath)) File.Delete(imagePath);
+            if (File.Exists(outputPath)) File.Delete(outputPath);
+            if (File.Exists(templatePath)) File.Delete(templatePath);
+        }
+    }
+
+    [Fact]
+    public void GenerateReport_WithImages_Throws_WhenImageFileNotFound()
+    {
+        var outputPath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.html");
+        try
+        {
+            var ex = Assert.Throws<FileNotFoundException>(() =>
+                _report.GenerateReport(
+                    _templatePath,
+                    outputPath,
+                    new Dictionary<string, string?>(),
+                    ownerPassword: null,
+                    images: new Dictionary<string, string?> { { "Logo", "nonexistent_image.png" } }));
+
+            ex.FileName.ShouldBe("nonexistent_image.png");
+            ex.Message.ShouldContain("nonexistent_image.png");
+        }
+        finally
+        {
+            if (File.Exists(outputPath)) File.Delete(outputPath);
+        }
+    }
+
+    [Fact]
+    public void GenerateReport_WithImages_SkipsNullImageValues()
+    {
+        var outputPath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.html");
+        try
+        {
+            var result = _report.GenerateReport(
+                _templatePath,
+                outputPath,
+                new Dictionary<string, string?>(),
+                ownerPassword: null,
+                images: new Dictionary<string, string?> { { "Logo", null } });
+
+            result.ShouldBe(outputPath);
+            File.Exists(outputPath).ShouldBeTrue();
+        }
+        finally
+        {
+            if (File.Exists(outputPath)) File.Delete(outputPath);
+        }
+    }
+
+    [Fact]
+    public void GenerateReport_WithImages_DetectsMimeType_ForJpeg()
+    {
+        var imagePath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.jpg");
+        var outputPath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.html");
+        var templatePath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.html");
+        try
+        {
+            // Write PNG bytes with a .jpg extension to test MIME detection only
+            File.WriteAllBytes(imagePath, MinimalPng);
+            File.WriteAllText(templatePath, "<html><body><img src=\"{{ Photo }}\" /></body></html>");
+
+            var result = _report.GenerateReport(
+                templatePath,
+                outputPath,
+                new Dictionary<string, string?>(),
+                ownerPassword: null,
+                images: new Dictionary<string, string?> { { "Photo", imagePath } });
+
+            var content = File.ReadAllText(outputPath);
+            content.ShouldContain("data:image/jpeg;base64,");
+        }
+        finally
+        {
+            if (File.Exists(imagePath)) File.Delete(imagePath);
+            if (File.Exists(outputPath)) File.Delete(outputPath);
+            if (File.Exists(templatePath)) File.Delete(templatePath);
         }
     }
 }

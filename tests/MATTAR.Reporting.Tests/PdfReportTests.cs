@@ -8,6 +8,10 @@ public class PdfReportTests
     private readonly IReport _report = new PdfReport();
     private readonly string _templatePath = Path.Combine("Fixtures", "FACTURE.pdf");
 
+    // Minimal 1×1 white PNG (valid, cross-platform)
+    private static readonly byte[] MinimalPng = Convert.FromBase64String(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQI12NgAAIABQAABjE+ibYAAAAASUVORK5CYII=");
+
     [Fact]
     public void GenerateReport_Throws_WhenTemplateNotFound()
     {
@@ -143,6 +147,77 @@ public class PdfReportTests
         finally
         {
             if (File.Exists(tempFile)) File.Delete(tempFile);
+        }
+    }
+
+    [Fact]
+    public void GenerateReport_WithImages_Throws_WhenImageFileNotFound()
+    {
+        var outputPath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.pdf");
+        try
+        {
+            var ex = Assert.Throws<FileNotFoundException>(() =>
+                _report.GenerateReport(
+                    _templatePath,
+                    outputPath,
+                    new Dictionary<string, string?>(),
+                    ownerPassword: null,
+                    images: new Dictionary<string, string?> { { "Logo", "nonexistent_image.png" } }));
+
+            ex.FileName.ShouldBe("nonexistent_image.png");
+            ex.Message.ShouldContain("nonexistent_image.png");
+        }
+        finally
+        {
+            if (File.Exists(outputPath)) File.Delete(outputPath);
+        }
+    }
+
+    [Fact]
+    public void GenerateReport_WithImages_SkipsNullImageValues()
+    {
+        var outputPath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.pdf");
+        try
+        {
+            var result = _report.GenerateReport(
+                _templatePath,
+                outputPath,
+                new Dictionary<string, string?>(),
+                ownerPassword: null,
+                images: new Dictionary<string, string?> { { "Logo", null } });
+
+            result.ShouldBe(outputPath);
+            File.Exists(outputPath).ShouldBeTrue();
+        }
+        finally
+        {
+            if (File.Exists(outputPath)) File.Delete(outputPath);
+        }
+    }
+
+    [Fact]
+    public void GenerateReport_WithImages_SkipsSilently_WhenImageFieldNotInForm()
+    {
+        var imagePath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.png");
+        var outputPath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.pdf");
+        try
+        {
+            File.WriteAllBytes(imagePath, MinimalPng);
+
+            var result = _report.GenerateReport(
+                _templatePath,
+                outputPath,
+                new Dictionary<string, string?>(),
+                ownerPassword: null,
+                images: new Dictionary<string, string?> { { "NonExistentImageField_XYZ", imagePath } });
+
+            result.ShouldBe(outputPath);
+            File.Exists(outputPath).ShouldBeTrue();
+        }
+        finally
+        {
+            if (File.Exists(imagePath)) File.Delete(imagePath);
+            if (File.Exists(outputPath)) File.Delete(outputPath);
         }
     }
 }

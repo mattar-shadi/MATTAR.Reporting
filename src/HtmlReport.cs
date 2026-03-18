@@ -8,7 +8,8 @@ namespace MATTAR.Reporting
             string templateDocPath,
             string outputPathFile,
             Dictionary<string, string?> datas,
-            string? ownerPassword = "MATTAR.Reporting")
+            string? ownerPassword = "MATTAR.Reporting",
+            Dictionary<string, string?>? images = null)
         {
             if (!File.Exists(templateDocPath))
                 throw new FileNotFoundException($"HTML template not found: '{templateDocPath}'", templateDocPath);
@@ -22,6 +23,23 @@ namespace MATTAR.Reporting
             foreach (var data in datas)
             {
                 scriptObject.Add(data.Key, data.Value);
+            }
+
+            if (images != null)
+            {
+                foreach (var image in images)
+                {
+                    if (image.Value == null)
+                        continue;
+
+                    if (!File.Exists(image.Value))
+                        throw new FileNotFoundException($"Image file not found: '{image.Value}'", image.Value);
+
+                    string mimeType = GetMimeType(image.Value);
+                    byte[] bytes = File.ReadAllBytes(image.Value);
+                    string base64 = Convert.ToBase64String(bytes);
+                    scriptObject.Add(image.Key, $"data:{mimeType};base64,{base64}");
+                }
             }
             var context = new Scriban.TemplateContext();
             context.PushGlobal(scriptObject);
@@ -76,5 +94,16 @@ namespace MATTAR.Reporting
 
             return outputPathFile;
         }
+
+        private static string GetMimeType(string filePath) =>
+            Path.GetExtension(filePath).ToLowerInvariant() switch
+            {
+                ".png" => "image/png",
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".gif" => "image/gif",
+                ".webp" => "image/webp",
+                ".bmp" => "image/bmp",
+                _ => "application/octet-stream"
+            };
     }
 }
