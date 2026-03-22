@@ -16,6 +16,7 @@
 - ✅ Permissions de sécurité configurables (impression, annotations, extraction...)
 - ✅ Génération de rapports depuis un template HTML avec remplacement de placeholders (via Scriban)
 - ✅ Export PDF depuis un template HTML (via HtmlRenderer.PdfSharp)
+- ✅ Support des images (injection base64 dans les rapports HTML, dessin sur les champs PDF)
 
 ---
 
@@ -179,6 +180,74 @@ Exemple de template HTML (`FACTURE.html`) :
 
 ---
 
+## 🖼️ Support des images
+
+Le paramètre optionnel `images` permet d'injecter des images dans les rapports générés.
+
+### Images dans un template HTML
+
+Les images sont converties en **URI base64** et injectées comme des variables Scriban. Utilisez-les directement dans l'attribut `src` d'une balise `<img>` :
+
+```csharp
+IReport htmlReport = new HtmlReport();
+
+string generatedPath = htmlReport.GenerateReport(
+    "templates/FACTURE.html",
+    "Output/FACTURE.html",
+    new Dictionary<string, string?>
+    {
+        { "Number", "F2231323" },
+        { "Name",   "MATTAR SASU" }
+    },
+    ownerPassword: null,
+    images: new Dictionary<string, string?>
+    {
+        { "Logo", "assets/logo.png" }
+    }
+);
+```
+
+Template HTML correspondant (`FACTURE.html`) :
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+    <img src="{{ Logo }}" style="width:200px;" />
+    <h1>Facture N° {{ Number }}</h1>
+    <p>Client : {{ Name }}</p>
+</body>
+</html>
+```
+
+Les types MIME reconnus automatiquement : `.png`, `.jpg`/`.jpeg`, `.gif`, `.webp`, `.bmp`.
+
+### Images dans un template PDF (AcroForm)
+
+Pour les templates PDF, les images sont dessinées directement sur la page aux coordonnées du champ AcroForm de type **bouton poussoir** (`PdfPushButtonField`) :
+
+```csharp
+IReport pdfReport = new PdfReport();
+
+string generatedPath = pdfReport.GenerateReport(
+    "templates/FACTURE.pdf",
+    "Output/FACTURE.pdf",
+    new Dictionary<string, string?>
+    {
+        { "Number", "F2231323" }
+    },
+    ownerPassword: null,
+    images: new Dictionary<string, string?>
+    {
+        { "Logo", "assets/logo.png" }  // "Logo" doit être le nom d'un champ bouton dans le PDF
+    }
+);
+```
+
+> **Remarque :** Si le champ n'existe pas ou n'est pas de type bouton poussoir, l'image est ignorée silencieusement. Si le fichier image est introuvable, une `FileNotFoundException` est levée.
+
+---
+
 ## 🔐 Sécurité du document généré
 
 Par défaut, le document PDF généré est protégé par un mot de passe propriétaire (`"MATTAR.Reporting"`). Les permissions appliquées sont :
@@ -212,7 +281,8 @@ public interface IReport
         string templateDocPath,
         string outputPathFile,
         Dictionary<string, string?> datas,
-        string ownerPassword = "MATTAR.Reporting"
+        string? ownerPassword = "MATTAR.Reporting",
+        Dictionary<string, string?>? images = null
     );
 }
 ```
@@ -221,8 +291,9 @@ public interface IReport
 |------------------|-------------------------------|----------------------------------------------------------|
 | `templateDocPath`| `string`                      | Chemin vers le fichier template                          |
 | `outputPathFile` | `string`                      | Chemin de destination du fichier généré                  |
-| `datas`          | `Dictionary<string, string?>` | Dictionnaire des champs à remplir (`nom du champ` → `valeur`) |
-| `ownerPassword`  | `string`                      | Mot de passe propriétaire du PDF (optionnel)             |
+| `datas`          | `Dictionary<string, string?>` | Dictionnaire des champs texte à remplir (`nom` → `valeur`) |
+| `ownerPassword`  | `string?`                     | Mot de passe propriétaire du PDF (optionnel)             |
+| `images`         | `Dictionary<string, string?>?`| Dictionnaire des images à insérer (`nom` → `chemin`)    |
 
 **Retour :** le chemin du fichier généré (`outputPathFile`).
 
@@ -233,7 +304,7 @@ public interface IReport
 - [x] Génération PDF via AcroForm
 - [x] Génération HTML (via Scriban + HtmlRenderer.PdfSharp)
 - [ ] Export PDF depuis template HTML avancé
-- [ ] Support des images dans les champs
+- [x] Support des images dans les champs
 - [x] Publication NuGet officielle
 
 ---
