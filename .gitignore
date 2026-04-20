@@ -1,6 +1,8 @@
 .vs
 sample/bin
 sample/obj
+samples/*/bin
+samples/*/obj
 src/bin
 src/obj
 tests/*/bin
