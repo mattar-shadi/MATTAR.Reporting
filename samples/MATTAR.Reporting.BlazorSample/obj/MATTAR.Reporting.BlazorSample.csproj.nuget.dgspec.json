@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/workspaces/MATTAR.Reporting/samples/MATTAR.Reporting.BlazorSample/MATTAR.Reporting.BlazorSample.csproj": {}
+    "/home/runner/work/MATTAR.Reporting/MATTAR.Reporting/samples/MATTAR.Reporting.BlazorSample/MATTAR.Reporting.BlazorSample.csproj": {}
   },
   "projects": {
-    "/workspaces/MATTAR.Reporting/samples/MATTAR.Reporting.BlazorSample/MATTAR.Reporting.BlazorSample.csproj": {
+    "/home/runner/work/MATTAR.Reporting/MATTAR.Reporting/samples/MATTAR.Reporting.BlazorSample/MATTAR.Reporting.BlazorSample.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/workspaces/MATTAR.Reporting/samples/MATTAR.Reporting.BlazorSample/MATTAR.Reporting.BlazorSample.csproj",
+        "projectUniqueName": "/home/runner/work/MATTAR.Reporting/MATTAR.Reporting/samples/MATTAR.Reporting.BlazorSample/MATTAR.Reporting.BlazorSample.csproj",
         "projectName": "MATTAR.Reporting.BlazorSample",
-        "projectPath": "/workspaces/MATTAR.Reporting/samples/MATTAR.Reporting.BlazorSample/MATTAR.Reporting.BlazorSample.csproj",
-        "packagesPath": "/home/codespace/.nuget/packages/",
-        "outputPath": "/workspaces/MATTAR.Reporting/samples/MATTAR.Reporting.BlazorSample/obj/",
+        "projectPath": "/home/runner/work/MATTAR.Reporting/MATTAR.Reporting/samples/MATTAR.Reporting.BlazorSample/MATTAR.Reporting.BlazorSample.csproj",
+        "packagesPath": "/home/runner/.nuget/packages/",
+        "outputPath": "/home/runner/work/MATTAR.Reporting/MATTAR.Reporting/samples/MATTAR.Reporting.BlazorSample/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/codespace/.nuget/NuGet/NuGet.Config"
+          "/home/runner/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -38,7 +38,7 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.100"
+        "SdkAnalysisLevel": "10.0.200"
       },
       "frameworks": {
         "net10.0": {
@@ -47,7 +47,7 @@
             "Microsoft.AspNetCore.App.Internal.Assets": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[10.0.0, )",
+              "version": "[10.0.5, )",
               "autoReferenced": true
             },
             "Microsoft.AspNetCore.Components.WebAssembly": {
@@ -61,19 +61,19 @@
             },
             "Microsoft.DotNet.HotReload.WebAssembly.Browser": {
               "target": "Package",
-              "version": "[10.0.100, )",
+              "version": "[10.0.201, )",
               "autoReferenced": true
             },
             "Microsoft.NET.ILLink.Tasks": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[10.0.0, )",
+              "version": "[10.0.5, )",
               "autoReferenced": true
             },
             "Microsoft.NET.Sdk.WebAssembly.Pack": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[10.0.0, )",
+              "version": "[10.0.5, )",
               "autoReferenced": true
             }
           },
@@ -91,7 +91,7 @@
           "downloadDependencies": [
             {
               "name": "Microsoft.NETCore.App.Runtime.Mono.browser-wasm",
-              "version": "[10.0.0, 10.0.0]"
+              "version": "[10.0.5, 10.0.5]"
             }
           ],
           "frameworkReferences": {
@@ -99,7 +99,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.201/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",

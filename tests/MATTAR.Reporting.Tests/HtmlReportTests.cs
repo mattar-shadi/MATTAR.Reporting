@@ -245,4 +245,149 @@ public class HtmlReportTests
             if (File.Exists(templatePath)) File.Delete(templatePath);
         }
     }
+
+    [Fact]
+    public void GenerateReport_WithTables_RendersTableRows_InHtmlOutput()
+    {
+        var outputPath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.html");
+        var tableTemplatePath = Path.Combine("Fixtures", "TABLE_TEMPLATE.html");
+        try
+        {
+            var rows = new List<Dictionary<string, string?>>
+            {
+                new() { { "Description", "Widget A" }, { "Quantity", "2" }, { "UnitPrice", "50.00" }, { "Total", "100.00" } },
+                new() { { "Description", "Widget B" }, { "Quantity", "3" }, { "UnitPrice", "30.00" }, { "Total", "90.00" } },
+            };
+
+            var result = _report.GenerateReport(
+                tableTemplatePath,
+                outputPath,
+                new Dictionary<string, string?>
+                {
+                    { "Number", "INV-042" },
+                    { "Name", "ACME Corp" },
+                    { "Date", "2024-06-01" },
+                    { "GrandTotal", "190.00" },
+                },
+                ownerPassword: null,
+                tables: new Dictionary<string, IEnumerable<Dictionary<string, string?>>>
+                {
+                    { "Items", rows }
+                });
+
+            result.ShouldBe(outputPath);
+            File.Exists(outputPath).ShouldBeTrue();
+
+            var content = File.ReadAllText(outputPath);
+            content.ShouldContain("INV-042");
+            content.ShouldContain("Widget A");
+            content.ShouldContain("Widget B");
+            content.ShouldContain("190.00");
+            content.ShouldContain("<table");
+            content.ShouldContain("<thead");
+            content.ShouldContain("<tbody");
+            content.ShouldContain("<tfoot");
+        }
+        finally
+        {
+            if (File.Exists(outputPath)) File.Delete(outputPath);
+        }
+    }
+
+    [Fact]
+    public void GenerateReport_WithTables_RendersEmptyTable_WhenNoRows()
+    {
+        var outputPath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.html");
+        var tableTemplatePath = Path.Combine("Fixtures", "TABLE_TEMPLATE.html");
+        try
+        {
+            var result = _report.GenerateReport(
+                tableTemplatePath,
+                outputPath,
+                new Dictionary<string, string?>
+                {
+                    { "Number", "INV-000" },
+                    { "Name", "Empty Client" },
+                    { "Date", "2024-01-01" },
+                    { "GrandTotal", "0.00" },
+                },
+                ownerPassword: null,
+                tables: new Dictionary<string, IEnumerable<Dictionary<string, string?>>>
+                {
+                    { "Items", Enumerable.Empty<Dictionary<string, string?>>() }
+                });
+
+            result.ShouldBe(outputPath);
+            File.Exists(outputPath).ShouldBeTrue();
+
+            var content = File.ReadAllText(outputPath);
+            content.ShouldContain("<table");
+            content.ShouldContain("INV-000");
+            content.ShouldContain("0.00");
+        }
+        finally
+        {
+            if (File.Exists(outputPath)) File.Delete(outputPath);
+        }
+    }
+
+    [Fact]
+    public void GenerateReport_WithNullTables_DoesNotThrow()
+    {
+        var outputPath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.html");
+        try
+        {
+            var result = _report.GenerateReport(
+                _templatePath,
+                outputPath,
+                new Dictionary<string, string?>(),
+                ownerPassword: null,
+                tables: null);
+
+            result.ShouldBe(outputPath);
+            File.Exists(outputPath).ShouldBeTrue();
+        }
+        finally
+        {
+            if (File.Exists(outputPath)) File.Delete(outputPath);
+        }
+    }
+
+    [Fact]
+    public void GenerateReport_WithTables_PreservesColumnAlignmentClasses()
+    {
+        var outputPath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.html");
+        var tableTemplatePath = Path.Combine("Fixtures", "TABLE_TEMPLATE.html");
+        try
+        {
+            var rows = new List<Dictionary<string, string?>>
+            {
+                new() { { "Description", "Service X" }, { "Quantity", "1" }, { "UnitPrice", "200.00" }, { "Total", "200.00" } },
+            };
+
+            var result = _report.GenerateReport(
+                tableTemplatePath,
+                outputPath,
+                new Dictionary<string, string?>
+                {
+                    { "Number", "INV-007" },
+                    { "Name", "Client Y" },
+                    { "Date", "2024-03-15" },
+                    { "GrandTotal", "200.00" },
+                },
+                ownerPassword: null,
+                tables: new Dictionary<string, IEnumerable<Dictionary<string, string?>>>
+                {
+                    { "Items", rows }
+                });
+
+            var content = File.ReadAllText(outputPath);
+            content.ShouldContain("class=\"numeric\"");
+            content.ShouldContain("Service X");
+        }
+        finally
+        {
+            if (File.Exists(outputPath)) File.Delete(outputPath);
+        }
+    }
 }

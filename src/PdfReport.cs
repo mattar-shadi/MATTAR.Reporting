@@ -12,7 +12,8 @@ namespace MATTAR.Reporting
             string outputPath,
             Dictionary<string, string?> datas,
             string? ownerPassword = "MATTAR.Reporting",
-            Dictionary<string, string?>? images = null)
+            Dictionary<string, string?>? images = null,
+            Dictionary<string, IEnumerable<Dictionary<string, string?>>>? tables = null)
         {
             if (!File.Exists(templatePath))
                 throw new FileNotFoundException($"PDF template not found: '{templatePath}'", templatePath);

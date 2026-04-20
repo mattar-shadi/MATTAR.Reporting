@@ -7,6 +7,7 @@
             string outputPathFile,
             Dictionary<string, string?> datas,
             string? ownerPassword = "MATTAR.Reporting",
-            Dictionary<string, string?>? images = null);
+            Dictionary<string, string?>? images = null,
+            Dictionary<string, IEnumerable<Dictionary<string, string?>>>? tables = null);
     }
 }
