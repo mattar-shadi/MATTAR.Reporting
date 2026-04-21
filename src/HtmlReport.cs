@@ -1,4 +1,5 @@
 ﻿using Scriban;
+using Scriban.Runtime;
 
 namespace MATTAR.Reporting
 {
@@ -9,7 +10,8 @@ namespace MATTAR.Reporting
             string outputPathFile,
             Dictionary<string, string?> datas,
             string? ownerPassword = "MATTAR.Reporting",
-            Dictionary<string, string?>? images = null)
+            Dictionary<string, string?>? images = null,
+            Dictionary<string, IEnumerable<Dictionary<string, string?>>>? tables = null)
         {
             if (!File.Exists(templateDocPath))
                 throw new FileNotFoundException($"HTML template not found: '{templateDocPath}'", templateDocPath);
@@ -19,7 +21,7 @@ namespace MATTAR.Reporting
 
             // 2. Replace placeholders via Scriban
             var template = Template.Parse(templateContent);
-            var scriptObject = new Scriban.Runtime.ScriptObject();
+            var scriptObject = new ScriptObject();
             foreach (var data in datas)
             {
                 scriptObject.Add(data.Key, data.Value);
@@ -41,7 +43,26 @@ namespace MATTAR.Reporting
                     scriptObject.Add(image.Key, $"data:{mimeType};base64,{base64}");
                 }
             }
-            var context = new Scriban.TemplateContext();
+
+            if (tables != null)
+            {
+                foreach (var table in tables)
+                {
+                    var scriptArray = new ScriptArray();
+                    foreach (var row in table.Value)
+                    {
+                        var rowObject = new ScriptObject();
+                        foreach (var cell in row)
+                        {
+                            rowObject.Add(cell.Key, cell.Value);
+                        }
+                        scriptArray.Add(rowObject);
+                    }
+                    scriptObject.Add(table.Key, scriptArray);
+                }
+            }
+
+            var context = new TemplateContext();
             context.PushGlobal(scriptObject);
             string renderedHtml = template.Render(context);
 
