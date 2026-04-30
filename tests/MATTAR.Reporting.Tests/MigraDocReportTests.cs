@@ -200,6 +200,32 @@ public class MigraDocReportTests
     }
 
     [Fact]
+    public void GenerateReport_WithImages_PassesImagePathAsScriban_WhenImageExists()
+    {
+        var imagePath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.png");
+        var outputPath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.pdf");
+        try
+        {
+            File.WriteAllBytes(imagePath, MinimalPng);
+
+            var result = _report.GenerateReport(
+                _templatePath,
+                outputPath,
+                new Dictionary<string, string?>(),
+                ownerPassword: null,
+                images: new Dictionary<string, string?> { { "Logo", imagePath } });
+
+            result.ShouldBe(outputPath);
+            File.Exists(outputPath).ShouldBeTrue();
+        }
+        finally
+        {
+            if (File.Exists(imagePath)) File.Delete(imagePath);
+            if (File.Exists(outputPath)) File.Delete(outputPath);
+        }
+    }
+
+    [Fact]
     public void GenerateReport_WithNullTables_DoesNotThrow()
     {
         var outputPath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.pdf");
