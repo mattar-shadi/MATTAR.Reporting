@@ -1,0 +1,43 @@
+# Blazor/C# specific
+bin/
+obj/
+dist/
+.vs/
+.vscode/
+*.user
+*.suo
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+
+# Rider
+.idea/
+*.sln.iml
+
+# Visual Studio
+.vscode/
+*.code-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node (if using npm)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Misc
+*.log
+*.swp
+*.swo
+*~

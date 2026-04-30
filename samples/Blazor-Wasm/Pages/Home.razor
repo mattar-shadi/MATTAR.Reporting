@@ -1,0 +1,221 @@
+﻿@page "/"
+@using MattarReportBlazor.Services
+@using MattarReportBlazor.Models
+@inject TemplateService TemplateService
+@inject ReportGeneratorService ReportGeneratorService
+@inject IJSRuntime JS
+
+<PageTitle>MATTAR.Report - Document Generation</PageTitle>
+
+<div class="home-container">
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>MATTAR.Report Demo</h1>
+            <p>Générez des documents professionnels en PDF et HTML à partir de templates</p>
+        </div>
+    </section>
+
+    <div class="main-content">
+        <div class="template-selector">
+            <h2>Sélectionner un Template</h2>
+            <div class="template-grid">
+                @foreach (var template in availableTemplates)
+                {
+                    <div class="template-card @(selectedTemplate?.Id == template.Id ? "selected" : "")"
+                         @onclick="() => SelectTemplate(template).ConfigureAwait(false)">
+                        <div class="template-icon">📄</div>
+                        <h3>@template.Name</h3>
+                        <p>@template.Description</p>
+                    </div>
+                }
+            </div>
+        </div>
+
+        @if (selectedTemplate != null)
+        {
+            <div class="editor-section">
+                <div class="form-editor">
+                    <h2>Données du Document</h2>
+                    <form>
+                        @foreach (var kvp in formData)
+                        {
+                            <div class="form-group">
+                                <label>@kvp.Key</label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       value="@kvp.Value"
+                                       @onchange="@((ChangeEventArgs e) => UpdateFormData(kvp.Key, e.Value?.ToString() ?? "").ConfigureAwait(false))" />
+                            </div>
+                        }
+                    </form>
+                </div>
+
+                <div class="preview-section">
+                    <h2>Aperçu</h2>
+                    <div class="preview-content">
+                        @if (previewHtml != null)
+                        {
+                            @((MarkupString)previewHtml)
+                        }
+                        else
+                        {
+                            <p class="text-muted">L'aperçu s'affichera ici...</p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="export-section">
+                <h2>Exporter le Document</h2>
+                <div class="button-group">
+                    <button class="btn btn-primary" @onclick="GeneratePdf" disabled="@isGenerating">
+                        @if (isGenerating)
+                        {
+                            <span>⏳ Génération...</span>
+                        }
+                        else
+                        {
+                            <span>📥 Télécharger PDF</span>
+                        }
+                    </button>
+                    <button class="btn btn-secondary" @onclick="GenerateHtml" disabled="@isGenerating">
+                        @if (isGenerating)
+                        {
+                            <span>⏳ Génération...</span>
+                        }
+                        else
+                        {
+                            <span>📥 Télécharger HTML</span>
+                        }
+                    </button>
+                </div>
+                @if (!string.IsNullOrEmpty(statusMessage))
+                {
+                    <div class="status-message @statusMessageType">
+                        @statusMessage
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private List<TemplateModel> availableTemplates = new();
+    private TemplateModel? selectedTemplate;
+    private Dictionary<string, string> formData = new();
+    private string? previewHtml;
+    private bool isGenerating = false;
+    private string statusMessage = string.Empty;
+    private string statusMessageType = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        availableTemplates = TemplateService.GetAvailableTemplates();
+    }
+
+    private async Task SelectTemplate(TemplateModel template)
+    {
+        selectedTemplate = template;
+        formData = new Dictionary<string, string>(selectedTemplate.SampleData);
+        await UpdatePreview();
+    }
+
+    private async Task UpdateFormData(string key, string value)
+    {
+        formData[key] = value;
+        await UpdatePreview();
+    }
+
+    private async Task UpdatePreview()
+    {
+        if (selectedTemplate == null) return;
+
+        try
+        {
+            var data = formData.ToDictionary(x => x.Key, x => (string?)x.Value);
+            var tables = selectedTemplate.SampleTables
+                .ToDictionary(x => x.Key, x => (IEnumerable<Dictionary<string, string?>>)x.Value.Cast<Dictionary<string, string?>>());
+
+            previewHtml = await ReportGeneratorService.GenerateHtmlReportAsync(
+                selectedTemplate.Content,
+                data,
+                tables.Any() ? tables : null);
+        }
+        catch (Exception ex)
+        {
+            statusMessage = $"Erreur lors de la génération de l'aperçu: {ex.Message}";
+            statusMessageType = "error";
+        }
+    }
+
+    private async Task GeneratePdf()
+    {
+        if (selectedTemplate == null) return;
+
+        isGenerating = true;
+        statusMessage = string.Empty;
+
+        try
+        {
+            var data = formData.ToDictionary(x => x.Key, x => (string?)x.Value);
+            var tables = selectedTemplate.SampleTables
+                .ToDictionary(x => x.Key, x => (IEnumerable<Dictionary<string, string?>>)x.Value.Cast<Dictionary<string, string?>>());
+
+            var pdfBytes = await ReportGeneratorService.GeneratePdfReportAsync(
+                selectedTemplate.Content,
+                data,
+                tables.Any() ? tables : null);
+
+            // Télécharger le fichier
+            await JS.InvokeVoidAsync("downloadFile", pdfBytes, $"{selectedTemplate.Name}_{DateTime.Now:yyyyMMdd_HHmmss}.pdf", "application/pdf");
+
+            statusMessage = "✅ PDF généré et téléchargé avec succès!";
+            statusMessageType = "success";
+        }
+        catch (Exception ex)
+        {
+            statusMessage = $"❌ Erreur lors de la génération du PDF: {ex.Message}";
+            statusMessageType = "error";
+        }
+        finally
+        {
+            isGenerating = false;
+        }
+    }
+
+    private async Task GenerateHtml()
+    {
+        if (selectedTemplate == null) return;
+
+        isGenerating = true;
+        statusMessage = string.Empty;
+
+        try
+        {
+            var data = formData.ToDictionary(x => x.Key, x => (string?)x.Value);
+            var tables = selectedTemplate.SampleTables
+                .ToDictionary(x => x.Key, x => (IEnumerable<Dictionary<string, string?>>)x.Value.Cast<Dictionary<string, string?>>());
+
+            var html = await ReportGeneratorService.GenerateHtmlReportAsync(
+                selectedTemplate.Content,
+                data,
+                tables.Any() ? tables : null);
+
+            var htmlBytes = System.Text.Encoding.UTF8.GetBytes(html);
+            await JS.InvokeVoidAsync("downloadFile", htmlBytes, $"{selectedTemplate.Name}_{DateTime.Now:yyyyMMdd_HHmmss}.html", "text/html");
+
+            statusMessage = "✅ HTML généré et téléchargé avec succès!";
+            statusMessageType = "success";
+        }
+        catch (Exception ex)
+        {
+            statusMessage = $"❌ Erreur lors de la génération du HTML: {ex.Message}";
+            statusMessageType = "error";
+        }
+        finally
+        {
+            isGenerating = false;
+        }
+    }
+}
