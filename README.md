@@ -7,6 +7,25 @@
 
 ---
 
+## 🎯 Démo Interactive
+
+**Essayez la démo Blazor WebAssembly en ligne :**
+
+👉 **[Démo MATTAR.Reporting sur GitHub Pages](https://mattar-shadi.github.io/MATTAR.Reporting/samples/Blazor-Wasm/)**
+
+Cette démo interactive vous permet de :
+- 📄 Générer des rapports PDF directement dans le navigateur
+- 🌐 Générer du HTML à partir de templates
+- 📋 Tester les 3 templates prédéfinis (Facture, Rapport Mensuel, Certificat)
+- ⚡ Voir les résultats en temps réel
+- 💾 Télécharger les documents générés
+
+**100% côté client** - Aucune donnée n'est envoyée à un serveur.
+
+Voir le code source : [`samples/Blazor-Wasm/`](https://github.com/mattar-shadi/MATTAR.Reporting/tree/main/samples/Blazor-Wasm)
+
+---
+
 ## 📦 Fonctionnalités
 
 - ✅ Génération de rapports PDF à partir d'un template PDF contenant des champs de formulaire (AcroForm)
@@ -17,6 +36,7 @@
 - ✅ Génération de rapports depuis un template HTML avec remplacement de placeholders (via Scriban)
 - ✅ Export PDF depuis un template HTML (via HtmlRenderer.PdfSharp)
 - ✅ Support des images (injection base64 dans les rapports HTML, dessin sur les champs PDF)
+- ✅ **Compatible Blazor WebAssembly** - Génération 100% côté client (v1.1.0+)
 
 ---
 
@@ -29,11 +49,17 @@ MATTAR.Reporting/
 │   │   └── IReport.cs          # Interface commune à tous les générateurs de rapports
 │   ├── PdfReport.cs            # Implémentation PDF (via PdfSharpCore)
 │   ├── HtmlReport.cs           # Implémentation HTML (via Scriban + HtmlRenderer.PdfSharp)
+│   ├── MigraDocReport.cs       # Implémentation MigraDoc (compatible WASM)
 │   └── MATTAR.Reporting.csproj # Projet de la bibliothèque
-├── sample/
-│   ├── Program.cs              # Exemple d'utilisation de la bibliothèque
-│   ├── FACTURE.pdf             # Template PDF exemple
-│   └── MATTAR.Reporting.Console.csproj
+├── samples/
+│   ├── Blazor-Wasm/            # 🆕 Démo interactive Blazor WebAssembly
+│   │   ├── Pages/
+│   │   ├── Services/
+│   │   └── MattarReportBlazor.csproj
+│   └── Console/
+│       ├── Program.cs          # Exemple d'utilisation console
+│       ├── FACTURE.pdf         # Template PDF exemple
+│       └── MATTAR.Reporting.Console.csproj
 ├── MATTAR.Reporting.sln
 └── README.md
 ```
@@ -65,8 +91,9 @@ dotnet build
 - [.NET 10.0](https://dotnet.microsoft.com/en-us/download/dotnet/10.0) ou supérieur
 - Dépendances NuGet :
   - [`PdfSharpCore`](https://www.nuget.org/packages/PdfSharpCore/) `1.3.56`
-  - [`Scriban`](https://www.nuget.org/packages/Scriban/) `6.6.0`
+  - [`Scriban`](https://www.nuget.org/packages/Scriban/) `7.0.3`
   - [`HtmlRenderer.PdfSharp.NetStandard2`](https://www.nuget.org/packages/HtmlRenderer.PdfSharp.NetStandard2/) `1.5.1.3`
+  - [`MigraDocCore.DocumentObjectModel`](https://www.nuget.org/packages/MigraDocCore.DocumentObjectModel/) `1.3.56` (pour WASM)
 
 ---
 
@@ -303,9 +330,28 @@ public interface IReport
 
 - [x] Génération PDF via AcroForm
 - [x] Génération HTML (via Scriban + HtmlRenderer.PdfSharp)
-- [ ] Export PDF depuis template HTML avancé
+- [x] Support MigraDoc (DDL templates) compatible WASM
+- [x] Démo interactive Blazor WebAssembly
 - [x] Support des images dans les champs
 - [x] Publication NuGet officielle
+- [ ] Export PDF depuis template HTML avancé
+- [ ] Support des tableaux dynamiques
+
+## 🚀 Exemples
+
+### Utilisation en Console
+
+Voir le dossier [`samples/Console/`](https://github.com/mattar-shadi/MATTAR.Reporting/tree/main/samples/Console) pour des exemples complets.
+
+### Utilisation en Blazor WebAssembly
+
+Voir le dossier [`samples/Blazor-Wasm/`](https://github.com/mattar-shadi/MATTAR.Reporting/tree/main/samples/Blazor-Wasm) pour une implémentation complète avec :
+- Interface utilisateur interactive
+- Génération de PDF côté client
+- Génération de HTML côté client
+- Téléchargement des documents générés
+
+**Démo en ligne :** https://mattar-shadi.github.io/MATTAR.Reporting/samples/Blazor-Wasm/
 
 ---
 
@@ -318,6 +364,17 @@ Ce projet est distribué sous licence **MIT**. Voir le fichier [LICENSE](LICENSE
 ## 🤝 Contribution
 
 Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une **issue** ou une **pull request**.
+
+---
+
+---
+
+## 🎓 Ressources
+
+- 📖 [Documentation complète](https://github.com/mattar-shadi/MATTAR.Reporting/wiki) (Wiki)
+- 🔗 [Package NuGet](https://www.nuget.org/packages/MATTAR.Reporting/)
+- 🐛 [Issues & Discussions](https://github.com/mattar-shadi/MATTAR.Reporting/issues)
+- 🎯 [Démo interactive](https://mattar-shadi.github.io/MATTAR.Reporting/samples/Blazor-Wasm/)
 
 ---
 
