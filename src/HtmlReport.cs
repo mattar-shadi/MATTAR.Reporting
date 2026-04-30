@@ -89,6 +89,11 @@ namespace MATTAR.Reporting
             }
             else if (extension == ".pdf")
             {
+#if BROWSER
+                throw new PlatformNotSupportedException(
+                    "HTML-to-PDF rendering via HtmlRenderer is not supported on WebAssembly. " +
+                    "Use MigraDocReport for PDF generation in Blazor WebAssembly.");
+#else
                 var document = TheArtOfDev.HtmlRenderer.PdfSharp.PdfGenerator.GeneratePdf(
                     renderedHtml,
                     PdfSharp.PageSize.A4);
@@ -107,6 +112,7 @@ namespace MATTAR.Reporting
                 }
 
                 document.Save(outputPathFile);
+#endif
             }
             else
             {
