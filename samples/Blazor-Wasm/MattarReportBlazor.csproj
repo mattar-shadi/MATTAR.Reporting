@@ -10,10 +10,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.7" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\MATTAR.Reporting\src\MATTAR.Reporting.csproj" />
+    <PackageReference Include="MATTAR.Reporting" Version="1.1.0" />
+    <PackageReference Include="Scriban" Version="7.0.3" />
   </ItemGroup>
 
 </Project>

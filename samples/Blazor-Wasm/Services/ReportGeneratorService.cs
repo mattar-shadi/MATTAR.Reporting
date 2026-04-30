@@ -1,4 +1,6 @@
 using MATTAR.Reporting;
+using Scriban;
+using Scriban.Runtime;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -7,6 +9,7 @@ namespace MattarReportBlazor.Services
 {
     /// <summary>
     /// Service pour générer des rapports HTML et PDF à partir de templates.
+    /// Utilise MATTAR.Reporting 1.0.1 avec support complet WASM.
     /// </summary>
     public class ReportGeneratorService
     {
@@ -37,12 +40,14 @@ namespace MattarReportBlazor.Services
                 // Écrire le template
                 await File.WriteAllTextAsync(templatePath, templateContent);
 
-                // Générer le rapport
+                // Générer le rapport avec la nouvelle API
                 _reportGenerator.GenerateReport(
                     templatePath,
                     outputPath,
                     data,
-                    tables: tables);
+                    "MATTAR.Reporting",
+                    null,
+                    tables);
 
                 // Lire le fichier généré
                 var pdfBytes = await File.ReadAllBytesAsync(outputPath);
@@ -60,7 +65,7 @@ namespace MattarReportBlazor.Services
         }
 
         /// <summary>
-        /// Génère un rapport HTML à partir d'un template HTML.
+        /// Génère un rapport HTML à partir d'un template HTML avec Scriban.
         /// </summary>
         public async Task<string> GenerateHtmlReportAsync(
             string templateContent,
@@ -69,21 +74,23 @@ namespace MattarReportBlazor.Services
         {
             try
             {
-                // Pour HTML, on peut utiliser Scriban directement
-                var scriban = Scriban.Template.Parse(templateContent);
-                var scriptObject = new Scriban.Runtime.ScriptObject();
+                // Parser le template Scriban
+                var template = Template.Parse(templateContent);
+                var scriptObject = new ScriptObject();
 
+                // Ajouter les données simples
                 foreach (var kvp in data)
                     scriptObject.Add(kvp.Key, kvp.Value);
 
+                // Ajouter les tableaux
                 if (tables != null)
                 {
                     foreach (var table in tables)
                     {
-                        var scriptArray = new Scriban.Runtime.ScriptArray();
+                        var scriptArray = new ScriptArray();
                         foreach (var row in table.Value)
                         {
-                            var rowObject = new Scriban.Runtime.ScriptObject();
+                            var rowObject = new ScriptObject();
                             foreach (var cell in row)
                                 rowObject.Add(cell.Key, cell.Value);
                             scriptArray.Add(rowObject);
@@ -92,9 +99,10 @@ namespace MattarReportBlazor.Services
                     }
                 }
 
-                var context = new Scriban.TemplateContext();
+                // Rendre le template
+                var context = new TemplateContext();
                 context.PushGlobal(scriptObject);
-                var html = scriban.Render(context);
+                var html = template.Render(context);
 
                 return await Task.FromResult(html);
             }
