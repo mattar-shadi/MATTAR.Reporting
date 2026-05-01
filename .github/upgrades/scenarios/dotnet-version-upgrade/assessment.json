@@ -1,0 +1,516 @@
+{
+  "settings": {
+    "components": {
+      "code": true,
+      "binaries": false
+    },
+    "targetId": "net11.0",
+    "targetDisplayName": ".NETCoreApp,Version=v11.0"
+  },
+  "analysisStartTime": "2026-05-01T21:03:41.1413442Z",
+  "analysisEndTime": "2026-05-01T21:03:43.5362441Z",
+  "privacyModeHelpUrl": "https://go.microsoft.com/fwlink/?linkid=2270980",
+  "stats": {
+    "summary": {
+      "projects": 5,
+      "issues": 3,
+      "incidents": 12,
+      "effort": 12
+    },
+    "charts": {
+      "severity": {
+        "Mandatory": 5,
+        "Optional": 1,
+        "Potential": 6,
+        "Information": 0
+      },
+      "category": {
+        "Project": 5,
+        "Api": 6,
+        "NuGet": 1
+      }
+    }
+  },
+  "projects": [
+    {
+      "path": "samples\\MATTAR.Reporting.BlazorSample\\MATTAR.Reporting.BlazorSample.csproj",
+      "startingProject": true,
+      "issues": 2,
+      "storyPoints": 4,
+      "properties": {
+        "appName": "MATTAR.Reporting.BlazorSample",
+        "projectKind": "AspNetCore",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 14,
+        "numberOfCodeFiles": 1,
+        "linesTotal": 383,
+        "linesOfCode": 11,
+        "totalApiScanned": 443,
+        "minLinesOfCodeToChange": 3,
+        "maxLinesOfCodeToChange": 3
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "acbd00b6-ecc3-4ce5-86ba-ae9e2c6a1664",
+          "ruleId": "Project.0002",
+          "projectPath": "samples\\MATTAR.Reporting.BlazorSample\\MATTAR.Reporting.BlazorSample.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Infrastructure cible actuelle: net10.0\nInfrastructure cible recommand\u00E9: net11.0",
+              "protected": "Infrastructure cible actuelle: net10.0\nInfrastructure cible recommand\u00E9: net11.0"
+            },
+            "kind": "File",
+            "path": "samples\\MATTAR.Reporting.BlazorSample\\MATTAR.Reporting.BlazorSample.csproj",
+            "snippet": "Infrastructure cible actuelle: net10.0\nInfrastructure cible recommand\u00E9: net11.0",
+            "protectedSnippet": "Infrastructure cible actuelle: net10.0\nInfrastructure cible recommand\u00E9: net11.0",
+            "properties": {
+              "CurrentTargetFramework": "net10.0",
+              "RecommendedTargetFramework": "net11.0"
+            }
+          }
+        },
+        {
+          "incidentId": "e8ca2104-558e-42d1-a5db-7a6f86118856",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "samples\\MATTAR.Reporting.BlazorSample\\MATTAR.Reporting.BlazorSample.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "builder.Services.AddScoped(sp =\u003E new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "samples\\MATTAR.Reporting.BlazorSample\\Program.cs",
+            "snippet": "builder.Services.AddScoped(sp =\u003E new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "Documentation sur les API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 8,
+            "column": 0
+          }
+        },
+        {
+          "incidentId": "deefc068-bcbc-4dd5-8a00-beef42dc19e6",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "samples\\MATTAR.Reporting.BlazorSample\\MATTAR.Reporting.BlazorSample.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "builder.Services.AddScoped(sp =\u003E new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });",
+              "protected": "M:System.Uri.#ctor(System.String)"
+            },
+            "kind": "File",
+            "path": "samples\\MATTAR.Reporting.BlazorSample\\Program.cs",
+            "snippet": "builder.Services.AddScoped(sp =\u003E new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });",
+            "protectedSnippet": "M:System.Uri.#ctor(System.String)",
+            "label": "M:System.Uri.#ctor(System.String)",
+            "links": [
+              {
+                "title": "Documentation sur les API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 8,
+            "column": 0
+          }
+        },
+        {
+          "incidentId": "9d746693-9bcd-4ebd-98cf-dbf0a96c1f7c",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "samples\\MATTAR.Reporting.BlazorSample\\MATTAR.Reporting.BlazorSample.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "builder.Services.AddScoped(sp =\u003E new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "samples\\MATTAR.Reporting.BlazorSample\\Program.cs",
+            "snippet": "builder.Services.AddScoped(sp =\u003E new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "Documentation sur les API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 8,
+            "column": 0
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "sample\\MATTAR.Reporting.Console.csproj",
+      "startingProject": true,
+      "issues": 1,
+      "storyPoints": 1,
+      "properties": {
+        "appName": "MATTAR.Reporting.Console",
+        "projectKind": "DotNetCoreApp",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 1,
+        "numberOfCodeFiles": 1,
+        "linesTotal": 62,
+        "linesOfCode": 62,
+        "totalApiScanned": 103,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "5f2c095e-1173-43a2-8306-26e35815cc0f",
+          "ruleId": "Project.0002",
+          "projectPath": "sample\\MATTAR.Reporting.Console.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Infrastructure cible actuelle: net10.0\nInfrastructure cible recommand\u00E9: net11.0",
+              "protected": "Infrastructure cible actuelle: net10.0\nInfrastructure cible recommand\u00E9: net11.0"
+            },
+            "kind": "File",
+            "path": "sample\\MATTAR.Reporting.Console.csproj",
+            "snippet": "Infrastructure cible actuelle: net10.0\nInfrastructure cible recommand\u00E9: net11.0",
+            "protectedSnippet": "Infrastructure cible actuelle: net10.0\nInfrastructure cible recommand\u00E9: net11.0",
+            "properties": {
+              "CurrentTargetFramework": "net10.0",
+              "RecommendedTargetFramework": "net11.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "src\\MATTAR.Reporting.csproj",
+      "startingProject": true,
+      "issues": 1,
+      "storyPoints": 1,
+      "properties": {
+        "appName": "MATTAR.Reporting",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net10.0",
+          "net10.0-browser"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 4,
+        "numberOfCodeFiles": 4,
+        "linesTotal": 371,
+        "linesOfCode": 371,
+        "totalApiScanned": 460,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "858a743e-d014-473e-a02b-f931cb4a3294",
+          "ruleId": "Project.0002",
+          "projectPath": "src\\MATTAR.Reporting.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Infrastructure cible actuelle: net10.0;net10.0-browser\nInfrastructure cible recommand\u00E9: net10.0;net10.0-browser;net11.0;net11.0--browser",
+              "protected": "Infrastructure cible actuelle: net10.0;net10.0-browser\nInfrastructure cible recommand\u00E9: net10.0;net10.0-browser;net11.0;net11.0--browser"
+            },
+            "kind": "File",
+            "path": "src\\MATTAR.Reporting.csproj",
+            "snippet": "Infrastructure cible actuelle: net10.0;net10.0-browser\nInfrastructure cible recommand\u00E9: net10.0;net10.0-browser;net11.0;net11.0--browser",
+            "protectedSnippet": "Infrastructure cible actuelle: net10.0;net10.0-browser\nInfrastructure cible recommand\u00E9: net10.0;net10.0-browser;net11.0;net11.0--browser",
+            "properties": {
+              "CurrentTargetFramework": "net10.0;net10.0-browser",
+              "RecommendedTargetFramework": "net10.0;net10.0-browser;net11.0;net11.0--browser"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "tests\\MATTAR.Reporting.Tests\\MATTAR.Reporting.Tests.csproj",
+      "startingProject": true,
+      "issues": 2,
+      "storyPoints": 2,
+      "properties": {
+        "appName": "MATTAR.Reporting.Tests",
+        "projectKind": "DotNetCoreApp",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 5,
+        "numberOfCodeFiles": 3,
+        "linesTotal": 3499,
+        "linesOfCode": 865,
+        "totalApiScanned": 1370,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "600f6d09-e314-4042-a4a5-044ab376c33a",
+          "ruleId": "NuGet.0005",
+          "projectPath": "tests\\MATTAR.Reporting.Tests\\MATTAR.Reporting.Tests.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "xunit, 2.9.3\n\nRecommandation\u00A0:\n\nThis package will only be updated for security issues. All future feature work has moved onto v3.\n\nGuide for migrating from xUnit.net v2 to v3: https://xunit.net/docs/getting-started/v3/migration\nRemove xunit, and replace with new package xunit, 2.9.3",
+              "protected": "xunit, 2.9.3\n\nRecommandation\u00A0:\n\nThis package will only be updated for security issues. All future feature work has moved onto v3.\n\nGuide for migrating from xUnit.net v2 to v3: https://xunit.net/docs/getting-started/v3/migration\nRemove xunit, and replace with new package xunit, 2.9.3"
+            },
+            "kind": "File",
+            "path": "tests\\MATTAR.Reporting.Tests\\MATTAR.Reporting.Tests.csproj",
+            "snippet": "xunit, 2.9.3\n\nRecommandation\u00A0:\n\nThis package will only be updated for security issues. All future feature work has moved onto v3.\n\nGuide for migrating from xUnit.net v2 to v3: https://xunit.net/docs/getting-started/v3/migration\nRemove xunit, and replace with new package xunit, 2.9.3",
+            "protectedSnippet": "xunit, 2.9.3\n\nRecommandation\u00A0:\n\nThis package will only be updated for security issues. All future feature work has moved onto v3.\n\nGuide for migrating from xUnit.net v2 to v3: https://xunit.net/docs/getting-started/v3/migration\nRemove xunit, and replace with new package xunit, 2.9.3",
+            "label": "xunit 2.9.3",
+            "properties": {
+              "PackageId": "xunit",
+              "PackageVersion": "2.9.3",
+              "PackageNewVersion": null,
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "5d031281-9b42-46ae-9d3b-a45787b0cbb5",
+          "ruleId": "Project.0002",
+          "projectPath": "tests\\MATTAR.Reporting.Tests\\MATTAR.Reporting.Tests.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Infrastructure cible actuelle: net10.0\nInfrastructure cible recommand\u00E9: net11.0",
+              "protected": "Infrastructure cible actuelle: net10.0\nInfrastructure cible recommand\u00E9: net11.0"
+            },
+            "kind": "File",
+            "path": "tests\\MATTAR.Reporting.Tests\\MATTAR.Reporting.Tests.csproj",
+            "snippet": "Infrastructure cible actuelle: net10.0\nInfrastructure cible recommand\u00E9: net11.0",
+            "protectedSnippet": "Infrastructure cible actuelle: net10.0\nInfrastructure cible recommand\u00E9: net11.0",
+            "properties": {
+              "CurrentTargetFramework": "net10.0",
+              "RecommendedTargetFramework": "net11.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "samples\\Blazor-Wasm\\MattarReportBlazor.csproj",
+      "startingProject": true,
+      "issues": 2,
+      "storyPoints": 4,
+      "properties": {
+        "appName": "MattarReportBlazor",
+        "projectKind": "AspNetCore",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 17,
+        "numberOfCodeFiles": 4,
+        "linesTotal": 1049,
+        "linesOfCode": 450,
+        "totalApiScanned": 1125,
+        "minLinesOfCodeToChange": 3,
+        "maxLinesOfCodeToChange": 3
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "f7bc179a-24e2-4dca-83cb-d4d96f396e3d",
+          "ruleId": "Project.0002",
+          "projectPath": "samples\\Blazor-Wasm\\MattarReportBlazor.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Infrastructure cible actuelle: net10.0\nInfrastructure cible recommand\u00E9: net11.0",
+              "protected": "Infrastructure cible actuelle: net10.0\nInfrastructure cible recommand\u00E9: net11.0"
+            },
+            "kind": "File",
+            "path": "samples\\Blazor-Wasm\\MattarReportBlazor.csproj",
+            "snippet": "Infrastructure cible actuelle: net10.0\nInfrastructure cible recommand\u00E9: net11.0",
+            "protectedSnippet": "Infrastructure cible actuelle: net10.0\nInfrastructure cible recommand\u00E9: net11.0",
+            "properties": {
+              "CurrentTargetFramework": "net10.0",
+              "RecommendedTargetFramework": "net11.0"
+            }
+          }
+        },
+        {
+          "incidentId": "0edf6b45-1f8b-4f7d-ae1f-7e142ab6f4fa",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "samples\\Blazor-Wasm\\MattarReportBlazor.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "builder.Services.AddScoped(sp =\u003E new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "samples\\Blazor-Wasm\\Program.cs",
+            "snippet": "builder.Services.AddScoped(sp =\u003E new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "Documentation sur les API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 9,
+            "column": 0
+          }
+        },
+        {
+          "incidentId": "1548ad30-5657-4cb5-80db-39923cee2fd5",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "samples\\Blazor-Wasm\\MattarReportBlazor.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "builder.Services.AddScoped(sp =\u003E new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });",
+              "protected": "M:System.Uri.#ctor(System.String)"
+            },
+            "kind": "File",
+            "path": "samples\\Blazor-Wasm\\Program.cs",
+            "snippet": "builder.Services.AddScoped(sp =\u003E new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });",
+            "protectedSnippet": "M:System.Uri.#ctor(System.String)",
+            "label": "M:System.Uri.#ctor(System.String)",
+            "links": [
+              {
+                "title": "Documentation sur les API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 9,
+            "column": 0
+          }
+        },
+        {
+          "incidentId": "de98efc3-35fd-44d8-9bc2-54e56b3ac779",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "samples\\Blazor-Wasm\\MattarReportBlazor.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "builder.Services.AddScoped(sp =\u003E new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "samples\\Blazor-Wasm\\Program.cs",
+            "snippet": "builder.Services.AddScoped(sp =\u003E new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "Documentation sur les API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 9,
+            "column": 0
+          }
+        }
+      ],
+      "features": []
+    }
+  ],
+  "rules": {
+    "Project.0002": {
+      "id": "Project.0002",
+      "isFeature": false,
+      "description": "Le ou les infrastructures cibles du projet doivent \u00EAtre remplac\u00E9es par la nouvelle infrastructure cible que vous avez s\u00E9lectionn\u00E9e pour cette mise \u00E0 niveau.\n\nPendant la mise \u00E0 niveau, l\u2019infrastructure cible est ajust\u00E9e en fonction de la plateforme correspondante, le cas \u00E9ch\u00E9ant. Dans certains cas, le projet entra\u00EEnera plusieurs infrastructures cibles apr\u00E8s la mise \u00E0 niveau s\u2019il utilisait des fonctionnalit\u00E9s qui ont d\u00E9sormais leurs propres plateformes dans les infrastructures .NET modernes (Windows, iOS, Android, etc.).",
+      "label": "Le ou les frameworks cibles du projet doivent \u00EAtre modifi\u00E9s",
+      "severity": "Mandatory",
+      "effort": 1,
+      "links": [
+        {
+          "title": "Vue d\u2019ensemble du transfert de .NET Framework vers .NET",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2265227",
+          "isCustom": false
+        },
+        {
+          "title": "Kits de d\u00E9veloppement logiciel (SDK) de projet .NET",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2265226",
+          "isCustom": false
+        }
+      ]
+    },
+    "Api.0003": {
+      "id": "Api.0003",
+      "isFeature": false,
+      "description": "L\u2019API pr\u00E9sente un changement de comportement dans la version .NET s\u00E9lectionn\u00E9e\u00A0: le code et les binaires peuvent se comporter diff\u00E9remment \u00E0 l\u2019ex\u00E9cution sans n\u00E9cessiter de recompilation, mais ce nouveau comportement peut \u00EAtre ind\u00E9sirable et n\u00E9cessiter des mises \u00E0 jour.",
+      "label": "Modification du comportement dans la version .NET s\u00E9lectionn\u00E9e",
+      "severity": "Potential",
+      "effort": 1
+    },
+    "NuGet.0005": {
+      "id": "NuGet.0005",
+      "isFeature": false,
+      "description": "Le package NuGet est d\u00E9conseill\u00E9.\n\nAcc\u00E9dez \u00E0 sa documentation et s\u2019il existe un guide pour remplacer les fonctionnalit\u00E9s fournies par ce package.",
+      "label": "Le package NuGet est d\u00E9conseill\u00E9",
+      "severity": "Optional",
+      "effort": 1,
+      "links": [
+        {
+          "url": "https://go.microsoft.com/fwlink/?linkid=2262531",
+          "isCustom": false
+        }
+      ]
+    }
+  }
+}
