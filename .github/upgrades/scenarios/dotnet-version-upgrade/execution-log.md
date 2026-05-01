@@ -13,3 +13,8 @@ Prérequis vérifiés — SDK .NET 11 installé et compatible. Aucun global.json
 
 5 projets migrés vers net11.0. TFM mis à jour, packages Blazor WebAssembly mis à niveau vers 11.0.0-preview, vulnérabilités ImageSharp résolues. Build propre, 36/36 tests passés.
 
+
+## [2026-05-01 23:17] 03-final-validation
+
+Validation finale réussie — build complet 0 erreur / 0 avertissement, 36/36 tests passés sur net11.0. Migration terminée.
+
