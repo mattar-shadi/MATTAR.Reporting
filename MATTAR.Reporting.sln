@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.4.33213.308
+# Visual Studio Version 18
+VisualStudioVersion = 18.6.11723.189 insiders
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MATTAR.Reporting.Console", "sample\MATTAR.Reporting.Console.csproj", "{97CCB86A-AE37-4E08-9F22-92C49B1F5BE3}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{5D20AA90-6969-D8BD-9DCD-8634F4692FDA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MATTAR.Reporting.BlazorSample", "samples\MATTAR.Reporting.BlazorSample\MATTAR.Reporting.BlazorSample.csproj", "{3BAF3AAF-6A38-481A-92DC-21CE7560695F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattarReportBlazor", "samples\Blazor-Wasm\MattarReportBlazor.csproj", "{D392696F-DD55-0498-4BF9-1674FA1F7839}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,18 @@ Global
 		{3BAF3AAF-6A38-481A-92DC-21CE7560695F}.Release|x64.Build.0 = Release|Any CPU
 		{3BAF3AAF-6A38-481A-92DC-21CE7560695F}.Release|x86.ActiveCfg = Release|Any CPU
 		{3BAF3AAF-6A38-481A-92DC-21CE7560695F}.Release|x86.Build.0 = Release|Any CPU
+		{D392696F-DD55-0498-4BF9-1674FA1F7839}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D392696F-DD55-0498-4BF9-1674FA1F7839}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D392696F-DD55-0498-4BF9-1674FA1F7839}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D392696F-DD55-0498-4BF9-1674FA1F7839}.Debug|x64.Build.0 = Debug|Any CPU
+		{D392696F-DD55-0498-4BF9-1674FA1F7839}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D392696F-DD55-0498-4BF9-1674FA1F7839}.Debug|x86.Build.0 = Debug|Any CPU
+		{D392696F-DD55-0498-4BF9-1674FA1F7839}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D392696F-DD55-0498-4BF9-1674FA1F7839}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D392696F-DD55-0498-4BF9-1674FA1F7839}.Release|x64.ActiveCfg = Release|Any CPU
+		{D392696F-DD55-0498-4BF9-1674FA1F7839}.Release|x64.Build.0 = Release|Any CPU
+		{D392696F-DD55-0498-4BF9-1674FA1F7839}.Release|x86.ActiveCfg = Release|Any CPU
+		{D392696F-DD55-0498-4BF9-1674FA1F7839}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -82,6 +96,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{1562C7B7-2122-4102-8CB1-9BBA9218FB95} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 		{3BAF3AAF-6A38-481A-92DC-21CE7560695F} = {5D20AA90-6969-D8BD-9DCD-8634F4692FDA}
+		{D392696F-DD55-0498-4BF9-1674FA1F7839} = {5D20AA90-6969-D8BD-9DCD-8634F4692FDA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BC0A00A5-F20A-450B-8B5E-317D5AE0D62F}
