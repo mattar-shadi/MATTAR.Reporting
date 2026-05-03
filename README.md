@@ -3,7 +3,11 @@
 [![CI - Build & Test](https://github.com/mattar-shadi/MATTAR.Reporting/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mattar-shadi/MATTAR.Reporting/actions/workflows/ci.yml?query=branch%3Amain)
 [![NuGet](https://img.shields.io/nuget/v/MATTAR.Reporting.svg)](https://www.nuget.org/packages/MATTAR.Reporting/)
 
-**MATTAR.Reporting** est une bibliothèque C# .NET simple et légère permettant de générer des rapports en remplissant des gabarits de documents (templates). Elle supporte actuellement la génération de **PDF** via des formulaires AcroForm, avec un support **HTML** prévu dans les prochaines versions.
+**MATTAR.Reporting** est une bibliothèque C# .NET simple et légère pour générer des rapports à partir de gabarits (templates). Elle supporte trois modes de génération :
+
+- **PDF AcroForm** — remplissage de champs de formulaire dans un PDF existant (via PdfSharpCore)
+- **HTML / PDF depuis template HTML** — rendu Scriban + export PDF (via HtmlRenderer.PdfSharp, hors WASM)
+- **PDF depuis template MigraDoc DDL** — rendu Scriban + MigraDocCore, **100 % compatible Blazor WebAssembly**
 
 ---
 
@@ -34,8 +38,10 @@ Voir le code source : [`samples/Blazor-Wasm/`](https://github.com/mattar-shadi/M
 - ✅ Création automatique du dossier de sortie si inexistant
 - ✅ Permissions de sécurité configurables (impression, annotations, extraction...)
 - ✅ Génération de rapports depuis un template HTML avec remplacement de placeholders (via Scriban)
-- ✅ Export PDF depuis un template HTML (via HtmlRenderer.PdfSharp)
+- ✅ Export PDF depuis un template HTML (via HtmlRenderer.PdfSharp, hors WASM)
+- ✅ Génération PDF depuis un template MigraDoc DDL (via Scriban + MigraDocCore, compatible WASM)
 - ✅ Support des images (injection base64 dans les rapports HTML, dessin sur les champs PDF)
+- ✅ Support des tableaux dynamiques (collections de lignes injectées via Scriban)
 - ✅ **Compatible Blazor WebAssembly** - Génération 100% côté client (v1.1.0+)
 
 ---
@@ -46,20 +52,28 @@ Voir le code source : [`samples/Blazor-Wasm/`](https://github.com/mattar-shadi/M
 MATTAR.Reporting/
 ├── src/
 │   ├── Interfaces/
-│   │   └── IReport.cs          # Interface commune à tous les générateurs de rapports
-│   ├── PdfReport.cs            # Implémentation PDF (via PdfSharpCore)
-│   ├── HtmlReport.cs           # Implémentation HTML (via Scriban + HtmlRenderer.PdfSharp)
-│   ├── MigraDocReport.cs       # Implémentation MigraDoc (compatible WASM)
-│   └── MATTAR.Reporting.csproj # Projet de la bibliothèque
+│   │   └── IReport.cs              # Interface commune à tous les générateurs de rapports
+│   ├── PdfReport.cs                # Implémentation PDF AcroForm (via PdfSharpCore)
+│   ├── HtmlReport.cs               # Implémentation HTML/PDF (via Scriban + HtmlRenderer.PdfSharp)
+│   ├── MigraDocReport.cs           # Implémentation MigraDoc DDL (compatible WASM)
+│   └── MATTAR.Reporting.csproj     # Projet de la bibliothèque (multi-target: net10.0 + net10.0-browser)
+├── sample/
+│   ├── Program.cs                  # Exemple d'utilisation console
+│   ├── FACTURE.pdf                 # Template PDF exemple (AcroForm)
+│   └── MATTAR.Reporting.Console.csproj
 ├── samples/
-│   ├── Blazor-Wasm/            # 🆕 Démo interactive Blazor WebAssembly
+│   ├── Blazor-Wasm/                # Démo interactive Blazor WebAssembly
 │   │   ├── Pages/
 │   │   ├── Services/
 │   │   └── MattarReportBlazor.csproj
-│   └── Console/
-│       ├── Program.cs          # Exemple d'utilisation console
-│       ├── FACTURE.pdf         # Template PDF exemple
-│       └── MATTAR.Reporting.Console.csproj
+│   └── MATTAR.Reporting.BlazorSample/  # Autre exemple Blazor
+├── tests/
+│   └── MATTAR.Reporting.Tests/     # Tests unitaires (xUnit + Shouldly)
+│       ├── Fixtures/               # Fichiers de test (templates PDF, DDL...)
+│       ├── PdfReportTests.cs
+│       ├── HtmlReportTests.cs
+│       └── MigraDocReportTests.cs
+├── docs/                           # Documentation (déployée sur GitHub Pages via Jekyll)
 ├── MATTAR.Reporting.sln
 └── README.md
 ```
@@ -89,11 +103,13 @@ dotnet build
 ## 📋 Prérequis
 
 - [.NET 10.0](https://dotnet.microsoft.com/en-us/download/dotnet/10.0) ou supérieur
-- Dépendances NuGet :
-  - [`PdfSharpCore`](https://www.nuget.org/packages/PdfSharpCore/) `1.3.56`
-  - [`Scriban`](https://www.nuget.org/packages/Scriban/) `7.0.3`
-  - [`HtmlRenderer.PdfSharp.NetStandard2`](https://www.nuget.org/packages/HtmlRenderer.PdfSharp.NetStandard2/) `1.5.1.3`
-  - [`MigraDocCore.DocumentObjectModel`](https://www.nuget.org/packages/MigraDocCore.DocumentObjectModel/) `1.3.56` (pour WASM)
+- Dépendances NuGet (gérées automatiquement) :
+  - [`PdfSharpCore`](https://www.nuget.org/packages/PdfSharpCore/) `1.3.67`
+  - [`Scriban`](https://www.nuget.org/packages/Scriban/) `7.1.0`
+  - [`MigraDocCore.DocumentObjectModel`](https://www.nuget.org/packages/MigraDocCore.DocumentObjectModel/) `1.3.67`
+  - [`MigraDocCore.Rendering`](https://www.nuget.org/packages/MigraDocCore.Rendering/) `1.3.67`
+  - [`SixLabors.ImageSharp`](https://www.nuget.org/packages/SixLabors.ImageSharp/) `3.1.12`
+  - [`HtmlRenderer.PdfSharp.NetStandard2`](https://www.nuget.org/packages/HtmlRenderer.PdfSharp.NetStandard2/) `1.5.1.3` *(hors WASM uniquement)*
 
 ---
 
@@ -107,7 +123,7 @@ Créez un fichier PDF contenant des **champs de formulaire AcroForm** (nommés).
 
 ---
 
-### 2. Générer un rapport PDF
+### 2. Générer un rapport PDF (AcroForm)
 
 ```csharp
 using MATTAR.Reporting;
@@ -115,7 +131,7 @@ using MATTAR.Reporting;
 IReport report = new PdfReport();
 
 string templatePath = "templates/FACTURE.pdf";
-string outputPath = $"Output/{{DateTime.Now:yyyy-MM-dd}}_FACTURE.pdf";
+string outputPath = $"Output/{DateTime.Now:yyyy-MM-dd}_FACTURE.pdf";
 
 string generatedFilePath = report.GenerateReport(
     templatePath,
@@ -207,6 +223,70 @@ Exemple de template HTML (`FACTURE.html`) :
 
 ---
 
+### 4. Générer un rapport depuis un template MigraDoc DDL (compatible WASM)
+
+Pour les environnements **Blazor WebAssembly** (où `HtmlReport` ne peut pas produire de PDF), utilisez `MigraDocReport` avec un template au format [MigraDoc DDL](https://www.pdfsharp.net/wiki/MigraDoc/Overview.ashx) combiné avec des placeholders Scriban :
+
+```csharp
+using MATTAR.Reporting;
+
+IReport migraReport = new MigraDocReport();
+
+string generatedPath = migraReport.GenerateReport(
+    "templates/INVOICE.ddl",
+    "Output/INVOICE.pdf",
+    new Dictionary<string, string?>
+    {
+        { "Number", "INV-001" },
+        { "Name",   "MATTAR SASU" },
+        { "Date",   DateTime.Now.ToShortDateString() },
+        { "Total",  "107 100" }
+    }
+);
+```
+
+---
+
+### 5. Tableaux dynamiques
+
+Le paramètre optionnel `tables` permet d'injecter des collections de lignes dans les templates Scriban (HTML ou MigraDoc DDL) :
+
+```csharp
+IReport htmlReport = new HtmlReport();
+
+string generatedPath = htmlReport.GenerateReport(
+    "templates/RAPPORT.html",
+    "Output/RAPPORT.html",
+    new Dictionary<string, string?> { { "Title", "Rapport Mensuel" } },
+    tables: new Dictionary<string, IEnumerable<Dictionary<string, string?>>>
+    {
+        {
+            "Items", new[]
+            {
+                new Dictionary<string, string?> { { "Name", "Produit A" }, { "Qty", "10" }, { "Price", "500" } },
+                new Dictionary<string, string?> { { "Name", "Produit B" }, { "Qty", "5" },  { "Price", "200" } }
+            }
+        }
+    }
+);
+```
+
+Template HTML correspondant :
+
+```html
+<table>
+  {{ for item in Items }}
+  <tr>
+    <td>{{ item.Name }}</td>
+    <td>{{ item.Qty }}</td>
+    <td>{{ item.Price }} €</td>
+  </tr>
+  {{ end }}
+</table>
+```
+
+---
+
 ## 🖼️ Support des images
 
 Le paramètre optionnel `images` permet d'injecter des images dans les rapports générés.
@@ -295,6 +375,8 @@ Vous pouvez personnaliser le mot de passe en passant le paramètre `ownerPasswor
 report.GenerateReport(templatePath, outputPath, datas, ownerPassword: "MonMotDePasse");
 ```
 
+Pour désactiver la protection, passez `ownerPassword: null` ou `ownerPassword: ""`.
+
 ---
 
 ## 🔌 Interface `IReport`
@@ -309,20 +391,98 @@ public interface IReport
         string outputPathFile,
         Dictionary<string, string?> datas,
         string? ownerPassword = "MATTAR.Reporting",
-        Dictionary<string, string?>? images = null
+        Dictionary<string, string?>? images = null,
+        Dictionary<string, IEnumerable<Dictionary<string, string?>>>? tables = null
     );
 }
 ```
 
-| Paramètre        | Type                          | Description                                              |
-|------------------|-------------------------------|----------------------------------------------------------|
-| `templateDocPath`| `string`                      | Chemin vers le fichier template                          |
-| `outputPathFile` | `string`                      | Chemin de destination du fichier généré                  |
-| `datas`          | `Dictionary<string, string?>` | Dictionnaire des champs texte à remplir (`nom` → `valeur`) |
-| `ownerPassword`  | `string?`                     | Mot de passe propriétaire du PDF (optionnel)             |
-| `images`         | `Dictionary<string, string?>?`| Dictionnaire des images à insérer (`nom` → `chemin`)    |
+| Paramètre         | Type                                                              | Description                                                    |
+|-------------------|-------------------------------------------------------------------|----------------------------------------------------------------|
+| `templateDocPath` | `string`                                                          | Chemin vers le fichier template (`.pdf`, `.html`, `.ddl`)      |
+| `outputPathFile`  | `string`                                                          | Chemin de destination du fichier généré                        |
+| `datas`           | `Dictionary<string, string?>`                                     | Champs texte à remplir (`nom` → `valeur`)                      |
+| `ownerPassword`   | `string?`                                                         | Mot de passe propriétaire du PDF (optionnel)                   |
+| `images`          | `Dictionary<string, string?>?`                                    | Images à insérer (`nom` → `chemin du fichier`)                 |
+| `tables`          | `Dictionary<string, IEnumerable<Dictionary<string, string?>>>?`  | Tableaux dynamiques (`nom` → collection de lignes)             |
 
 **Retour :** le chemin du fichier généré (`outputPathFile`).
+
+---
+
+## 🧪 Tests
+
+Les tests unitaires se trouvent dans [`tests/MATTAR.Reporting.Tests/`](tests/MATTAR.Reporting.Tests/) et utilisent **xUnit** et **Shouldly**.
+
+```bash
+# Lancer tous les tests
+dotnet test
+
+# Avec sortie détaillée
+dotnet test --verbosity normal
+
+# En mode Release
+dotnet test --configuration Release --verbosity normal
+```
+
+Les cas couverts incluent : template introuvable, valeurs `null`, création automatique du répertoire de sortie, protection par mot de passe, images manquantes ou inconnues, et tableaux dynamiques.
+
+---
+
+## ⚙️ CI/CD
+
+Le projet utilise quatre workflows GitHub Actions :
+
+| Workflow | Déclencheur | Description |
+|----------|-------------|-------------|
+| **CI - Build & Test** (`ci.yml`) | Push sur toutes les branches / PR vers `main` | Build + tests automatiques |
+| **Publish - NuGet** (`publish.yml`) | Manuel (`workflow_dispatch`) | Publication du package sur NuGet.org (nécessite le secret `NUGET_API_KEY`) |
+| **Deploy Blazor WASM** (`deploy-blazor-wasm.yml`) | Push sur `main` (changements dans `samples/Blazor-Wasm/`) | Build et déploiement de la démo sur GitHub Pages |
+| **Deploy GitHub Pages** (`pages.yml`) | Push sur `main` (changements dans `docs/`) | Déploiement de la documentation via Jekyll |
+
+---
+
+## 🚀 Exemples
+
+### Utilisation en Console
+
+Voir le dossier [`sample/`](https://github.com/mattar-shadi/MATTAR.Reporting/tree/main/sample) pour un exemple d'utilisation console complet.
+
+### Utilisation en Blazor WebAssembly
+
+Voir le dossier [`samples/Blazor-Wasm/`](https://github.com/mattar-shadi/MATTAR.Reporting/tree/main/samples/Blazor-Wasm) pour une implémentation complète avec :
+- Interface utilisateur interactive
+- Génération de PDF côté client (via `MigraDocReport`)
+- Génération de HTML côté client (via `HtmlReport`)
+- Téléchargement des documents générés
+
+**Démo en ligne :** https://mattar-shadi.github.io/MATTAR.Reporting/samples/Blazor-Wasm/
+
+---
+
+## 🔧 Dépannage
+
+**`PlatformNotSupportedException` lors de la génération PDF depuis un template HTML en WASM**
+
+`HtmlReport.GenerateReport(...)` avec un fichier de sortie `.pdf` n'est pas supporté en Blazor WebAssembly. Utilisez `MigraDocReport` à la place pour générer des PDF en WASM :
+
+```csharp
+// ❌ Ne fonctionne pas en WASM
+IReport htmlReport = new HtmlReport();
+htmlReport.GenerateReport("template.html", "output.pdf", datas);
+
+// ✅ Fonctionne en WASM
+IReport migraReport = new MigraDocReport();
+migraReport.GenerateReport("template.ddl", "output.pdf", datas);
+```
+
+**`FileNotFoundException` sur le template**
+
+Vérifiez que le chemin du template est correct et que le fichier est bien accessible. Utilisez `Path.GetFullPath(...)` pour déboguer les chemins relatifs.
+
+**`DirectoryNotFoundException` sur le répertoire de sortie**
+
+La bibliothèque crée automatiquement le répertoire de sortie. Cette exception survient uniquement si un fichier (non dossier) existe déjà sur le chemin parent spécifié.
 
 ---
 
@@ -333,25 +493,9 @@ public interface IReport
 - [x] Support MigraDoc (DDL templates) compatible WASM
 - [x] Démo interactive Blazor WebAssembly
 - [x] Support des images dans les champs
+- [x] Support des tableaux dynamiques (via Scriban)
 - [x] Publication NuGet officielle
-- [ ] Export PDF depuis template HTML avancé
-- [ ] Support des tableaux dynamiques
-
-## 🚀 Exemples
-
-### Utilisation en Console
-
-Voir le dossier [`samples/Console/`](https://github.com/mattar-shadi/MATTAR.Reporting/tree/main/samples/Console) pour des exemples complets.
-
-### Utilisation en Blazor WebAssembly
-
-Voir le dossier [`samples/Blazor-Wasm/`](https://github.com/mattar-shadi/MATTAR.Reporting/tree/main/samples/Blazor-Wasm) pour une implémentation complète avec :
-- Interface utilisateur interactive
-- Génération de PDF côté client
-- Génération de HTML côté client
-- Téléchargement des documents générés
-
-**Démo en ligne :** https://mattar-shadi.github.io/MATTAR.Reporting/samples/Blazor-Wasm/
+- [ ] Export PDF depuis template HTML avancé (mise en page complexe)
 
 ---
 
@@ -363,15 +507,21 @@ Ce projet est distribué sous licence **MIT**. Voir le fichier [LICENSE](LICENSE
 
 ## 🤝 Contribution
 
-Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une **issue** ou une **pull request**.
+Les contributions sont les bienvenues !
 
----
+1. Forkez le dépôt
+2. Créez une branche pour votre fonctionnalité (`git checkout -b feature/ma-fonctionnalite`)
+3. Committez vos changements (`git commit -m 'feat: ajouter ma fonctionnalité'`)
+4. Poussez vers la branche (`git push origin feature/ma-fonctionnalite`)
+5. Ouvrez une **Pull Request**
+
+N'hésitez pas à ouvrir une **issue** pour signaler un bug ou proposer une amélioration.
 
 ---
 
 ## 🎓 Ressources
 
-- 📖 [Documentation complète](https://github.com/mattar-shadi/MATTAR.Reporting/wiki) (Wiki)
+- 📖 [Documentation complète](https://mattar-shadi.github.io/MATTAR.Reporting/) (GitHub Pages)
 - 🔗 [Package NuGet](https://www.nuget.org/packages/MATTAR.Reporting/)
 - 🐛 [Issues & Discussions](https://github.com/mattar-shadi/MATTAR.Reporting/issues)
 - 🎯 [Démo interactive](https://mattar-shadi.github.io/MATTAR.Reporting/samples/Blazor-Wasm/)
