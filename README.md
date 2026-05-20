@@ -105,7 +105,7 @@ dotnet build
 - [.NET 10.0](https://dotnet.microsoft.com/en-us/download/dotnet/10.0) ou supérieur
 - Dépendances NuGet (gérées automatiquement) :
   - [`PdfSharpCore`](https://www.nuget.org/packages/PdfSharpCore/) `1.3.67`
-  - [`Scriban`](https://www.nuget.org/packages/Scriban/) `7.1.0`
+  - [`Scriban`](https://www.nuget.org/packages/Scriban/) `7.2.0`
   - [`MigraDocCore.DocumentObjectModel`](https://www.nuget.org/packages/MigraDocCore.DocumentObjectModel/) `1.3.67`
   - [`MigraDocCore.Rendering`](https://www.nuget.org/packages/MigraDocCore.Rendering/) `1.3.67`
   - [`SixLabors.ImageSharp`](https://www.nuget.org/packages/SixLabors.ImageSharp/) `3.1.12`
