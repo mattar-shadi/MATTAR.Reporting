@@ -3,6 +3,7 @@ using Shouldly;
 using PdfSharpCore.Pdf;
 using PdfSharpCore.Pdf.IO;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Metadata.Profiles.Icc;
 using SixLabors.ImageSharp.PixelFormats;
 
 namespace MATTAR.Reporting.Tests;
@@ -226,9 +227,10 @@ public class PdfReportTests
     }
 
     [Theory]
-    [InlineData("png")]
-    [InlineData("jpg")]
-    public void GenerateReport_WithImages_EmbedsImageInPdf(string extension)
+    [InlineData("png", false)]
+    [InlineData("jpg", false)]
+    [InlineData("png", true)]
+    public void GenerateReport_WithImages_EmbedsImageInPdf(string extension, bool withColorProfile)
     {
         var tempDirectory = Path.Combine(Path.GetTempPath(), $"reporting_test_{Guid.NewGuid()}");
         Directory.CreateDirectory(tempDirectory);
@@ -238,7 +240,16 @@ public class PdfReportTests
             var templatePath = Path.Combine(tempDirectory, "template.pdf");
             var outputPath = Path.Combine(tempDirectory, "output.pdf");
             using (var image = new Image<Rgba32>(2, 2, new Rgba32(255, 255, 255, 128)))
+            {
+                if (withColorProfile)
+                    image.Metadata.IccProfile = new IccProfile();
                 image.Save(imagePath);
+            }
+            if (withColorProfile)
+            {
+                using var savedImage = Image.Load(imagePath);
+                savedImage.Metadata.IccProfile.ShouldNotBeNull();
+            }
 
             using (var template = PdfReader.Open(_templatePath, PdfDocumentOpenMode.Modify))
             {

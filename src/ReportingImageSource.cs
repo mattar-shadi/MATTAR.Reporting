@@ -21,7 +21,7 @@ internal sealed class ReportingImageSource(string path) : ImageSource.IImageSour
         => _image.SaveAsJpeg(stream, new JpegEncoder { Quality = 75 });
 
     public void SaveAsPdfBitmap(MemoryStream stream)
-        => _image.Save(stream, new BmpEncoder { BitsPerPixel = BmpBitsPerPixel.Bit32 });
+        => _image.Save(stream, new BmpEncoder { BitsPerPixel = BmpBitsPerPixel.Bit32, SkipMetadata = true });
 
     public void Dispose() => _image.Dispose();
 }
