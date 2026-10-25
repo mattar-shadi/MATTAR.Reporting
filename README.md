@@ -108,8 +108,14 @@ dotnet build
   - [`Scriban`](https://www.nuget.org/packages/Scriban/) `7.2.5`
   - [`MigraDocCore.DocumentObjectModel`](https://www.nuget.org/packages/MigraDocCore.DocumentObjectModel/) `1.3.67`
   - [`MigraDocCore.Rendering`](https://www.nuget.org/packages/MigraDocCore.Rendering/) `1.3.67`
-  - [`SixLabors.ImageSharp`](https://www.nuget.org/packages/SixLabors.ImageSharp/) `3.1.12`
+  - [`SixLabors.ImageSharp`](https://www.nuget.org/packages/SixLabors.ImageSharp/) `4.1.3`
   - [`HtmlRenderer.PdfSharp.NetStandard2`](https://www.nuget.org/packages/HtmlRenderer.PdfSharp.NetStandard2/) `1.5.1.3` *(hors WASM uniquement)*
+
+ImageSharp `4.1.3` corrige les vulnérabilités des versions précédentes, y compris `3.1.12`. Une référence explicite dans l'exemple `samples/Blazor-Wasm` remplace également la version transitive `1.0.4` provenant de `MATTAR.Reporting` publié → `PdfSharpCore`.
+
+ImageSharp 4 cible .NET 8 ou supérieur (compatible avec .NET 10) et applique la [licence Six Labors](https://sixlabors.com/pricing/) à la compilation. Pour une compilation Release, fournissez une licence valide via la propriété MSBuild `SixLaborsLicenseFile` ou `SixLaborsLicenseKey`, sans la committer. La licence MIT du dépôt ne remplace pas les conditions de licence de ses dépendances.
+
+Le chargement des images des formulaires PDF utilise un adaptateur vers les API ImageSharp actuelles : le chargeur par défaut de PdfSharpCore appelle des surcharges supprimées depuis ImageSharp 1. La dépendance transitive `SixLabors.Fonts` de PdfSharpCore reste inchangée.
 
 ---
 
