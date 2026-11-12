@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.7" PrivateAssets="all" />
     <PackageReference Include="MATTAR.Reporting" Version="1.1.0" />
     <PackageReference Include="Scriban" Version="7.2.5" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="4.1.3" />
   </ItemGroup>
 
 </Project>

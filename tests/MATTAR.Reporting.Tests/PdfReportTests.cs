@@ -1,5 +1,10 @@
 using MATTAR.Reporting;
 using Shouldly;
+using PdfSharpCore.Pdf;
+using PdfSharpCore.Pdf.IO;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Metadata.Profiles.Icc;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace MATTAR.Reporting.Tests;
 
@@ -218,6 +223,57 @@ public class PdfReportTests
         {
             if (File.Exists(imagePath)) File.Delete(imagePath);
             if (File.Exists(outputPath)) File.Delete(outputPath);
+        }
+    }
+
+    [Theory]
+    [InlineData("png", false)]
+    [InlineData("jpg", false)]
+    [InlineData("png", true)]
+    public void GenerateReport_WithImages_EmbedsImageInPdf(string extension, bool withColorProfile)
+    {
+        var tempDirectory = Path.Combine(Path.GetTempPath(), $"reporting_test_{Guid.NewGuid()}");
+        Directory.CreateDirectory(tempDirectory);
+        try
+        {
+            var imagePath = Path.Combine(tempDirectory, $"logo.{extension}");
+            var templatePath = Path.Combine(tempDirectory, "template.pdf");
+            var outputPath = Path.Combine(tempDirectory, "output.pdf");
+            using (var image = new Image<Rgba32>(2, 2, new Rgba32(255, 255, 255, 128)))
+            {
+                if (withColorProfile)
+                    image.Metadata.IccProfile = new IccProfile();
+                image.Save(imagePath);
+            }
+            if (withColorProfile)
+            {
+                using var savedImage = Image.Load(imagePath);
+                savedImage.Metadata.IccProfile.ShouldNotBeNull();
+            }
+
+            using (var template = PdfReader.Open(_templatePath, PdfDocumentOpenMode.Modify))
+            {
+                var page = template.Pages[0];
+                var field = template.AcroForm.Fields["Number"];
+                field.Elements.SetName("/FT", "/Btn");
+                field.Elements.SetInteger("/Ff", 65536); // Push button
+                field.Elements["/P"] = page.Reference;
+                template.Save(templatePath);
+            }
+
+            _report.GenerateReport(
+                templatePath,
+                outputPath,
+                new Dictionary<string, string?>(),
+                ownerPassword: null,
+                images: new Dictionary<string, string?> { { "Number", imagePath } })
+                .ShouldBe(outputPath);
+
+            File.ReadAllText(outputPath).ShouldContain("/Subtype /Image");
+        }
+        finally
+        {
+            Directory.Delete(tempDirectory, true);
         }
     }
 }

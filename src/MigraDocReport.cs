@@ -7,7 +7,7 @@ namespace MATTAR.Reporting
 {
     /// <summary>
     /// Generates a PDF from a MigraDoc DDL template using Scriban for placeholder substitution.
-    /// This implementation uses only MIT-licensed packages and is compatible with Blazor WebAssembly.
+    /// This implementation is compatible with Blazor WebAssembly; dependencies retain their own licenses.
     /// </summary>
     public class MigraDocReport : IReport
     {

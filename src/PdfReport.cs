@@ -69,7 +69,7 @@ namespace MATTAR.Reporting
                     PdfPage? fieldPage = null;
                     for (int i = 0; i < template.Pages.Count; i++)
                     {
-                        if (ReferenceEquals(template.Pages[i], pageObj))
+                        if (template.Pages[i].Reference == pageObj?.Reference)
                         {
                             fieldPage = template.Pages[i];
                             break;
@@ -81,8 +81,9 @@ namespace MATTAR.Reporting
 
                     var fieldRect = field.Elements.GetRectangle("/Rect");
 
+                    using var imageSource = new ReportingImageSource(image.Value);
                     using var gfx = XGraphics.FromPdfPage(fieldPage);
-                    using var xImage = XImage.FromFile(image.Value);
+                    using var xImage = XImage.FromImageSource(imageSource);
 
                     // PDF coordinates have origin at bottom-left; XGraphics origin is top-left
                     double x = fieldRect.X1;
